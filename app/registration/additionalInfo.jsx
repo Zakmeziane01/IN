@@ -1,16 +1,12 @@
-import { View, Text, ScrollView, Alert,TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Alert} from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from "expo-router";
 import FormField from '../../components/FormField';
+
 import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { updateUserAdditionalInfo } from '../../lib/appwrite';  // Import the function
-
-import DatePicker from 'react-native-datepicker';
-
-
-
 
 
 const AdditionalInfo = () => {
@@ -20,12 +16,12 @@ const AdditionalInfo = () => {
   const [form, setForm] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
-    birthday: new Date(),
-    gender: ''
+    birthday: user.birthday ? new Date(user.birthday) : new Date(),
+    gender: user.gender 
   });
 
   // Function to handle form submission
-  const submit = async () => {  
+  const submit = async () => {
     if(form.firstName === "" || form.birthday === ""|| form.gender === ""){
       Alert.alert("Error", "Please fill in all the fields");
       return;
@@ -33,14 +29,15 @@ const AdditionalInfo = () => {
     
     setIsSubmitting(true);
     try {
-      await updateUserAdditionalInfo(user.$id, form.firstName, form.lastName, form.birthday);
-      router.replace("");
+      await updateUserAdditionalInfo(user.$id, form.firstName, form.lastName, form.birthday, form.gender);
+      router.replace("/registration/localization");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -64,26 +61,22 @@ const AdditionalInfo = () => {
             otherStyles="mt-7"
           />
 
-          <Text className="text-white mt-7">Birthday</Text>
-          <DatePicker
-            className="w-full bg-black-100 text-white border-0 mt-2 rounded-md"
-            selected={form.birthday}
-            onChange={(date) => setForm({ ...form, birthday: date })}
-            dateFormat="yyyy-MM-dd"
-            maxDate={new Date()}
-            showYearDropdown
-            scrollableYearDropdown
+          <FormField
+            title="Birthday"
+            value={form.birthday}
+            placeholder="Select your birthday"
+            handleChangeText={(date) => setForm({ ...form, birthday: date })}
+            mode="date"
+            otherStyles="mt-7"
           />
-
-          <Text className="text-white mt-7">Gender</Text>
-          <View className="flex flex-row mt-2">
-            <TouchableOpacity onPress={() => setForm({ ...form, gender: 'Male' })} className={`p-2 rounded-md ${form.gender === 'Male' ? 'bg-secondary' : 'bg-black-100'}`}>
-              <Text className="text-white">Male</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setForm({ ...form, gender: 'Female' })} className={`p-2 rounded-md ml-4 ${form.gender === 'Female' ? 'bg-secondary' : 'bg-black-100'}`}>
-              <Text className="text-white">Female</Text>
-            </TouchableOpacity>
-          </View>
+     
+          <FormField
+            title="Gender"
+            value={form.gender}
+            handleChangeText={(e) => setForm({ ...form, gender: e })}
+            mode="gender"
+            otherStyles="mt-7"
+          />
 
           <CustomButton
             title="Submit"

@@ -27,6 +27,42 @@ const RegistrationLayout = () => {
           }}
         />
 
+        <Stack.Screen
+          name="localization"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="allowNotification"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="ChatPart"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="careerPath"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="genderCollaborator"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+
         
       </Stack>
 

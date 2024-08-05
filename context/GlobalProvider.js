@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-
+                                                                                           //GlobalProvider looks good and is structured correctly to handle user authentication and provide global state management. However, to ensure that the loading state is properly handled and that your application behaves correctly based on the user's authentication state, you might want to adjust how you render your main application content.
 import { getCurrentUser } from "../lib/appwrite";
 
 const GlobalContext = createContext();
