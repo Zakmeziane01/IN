@@ -44,7 +44,7 @@ const CareerPath = () => {
       
       // Call the careerPath function with the formatted string
       await careerPath(user.$id, careerPathString);
-      router.replace("/registration/genderCollaborator");
+      router.replace("/registration/skills");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {

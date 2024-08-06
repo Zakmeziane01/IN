@@ -1,31 +1,30 @@
 import { View, Text, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import RadioButton from '../../components/RadioButton';  // Adjust the import path as necessary
-import { useGlobalContext } from "../../context/GlobalProvider"; // Assuming you use context for user info
+import FormField from '../../components/FormField';
+import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from "expo-router";
-import IconButton from '../../components/iconButton';// Adjust the import path as necessary
+import IconButton from '../../components/iconButton'; // Adjust the import path as necessary
 import { CollaboratorGender } from '../../lib/appwrite'; 
 
 const GenderCollaborator = () => {
-  const { user } = useGlobalContext(); // Get user data from global context
-  const [selectedGender, setSelectedGender] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useGlobalContext();
 
-  const handleGenderSelect = (collabGender) => {
-    setSelectedGender(collabGender);
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    CollabGender: user.CollabGender || "" // Ensure default value if user.CollabGender is undefined
+  });
 
   const handlePress = async () => {
-    if (!selectedGender) {
-      Alert.alert('Error', 'Please select an option');
+    if(form.CollabGender === ""){
+      Alert.alert("Error", "Please fill in all the fields");
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await CollaboratorGender(user.$id, selectedGender);
-      router.replace(""); // Replace with the appropriate route
+      await CollaboratorGender(user.$id, form.CollabGender);
+      router.replace(""); // Adjust the route if necessary
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -36,32 +35,29 @@ const GenderCollaborator = () => {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>
-      <View className="flex-1 justify-center items-center p-4">
+        <View className="flex-1 justify-center items-center p-4">
           <Text className="text-2xl font-semibold mt-10 font-psemibold">
-            What type of collaborator are looking for 
+            What type of collaborator are you looking for?
           </Text>
-
-          <RadioButton
-            options={['Male', 'Female', 'Other']}
-            selectedOption={selectedGender}
-            onOptionSelect={handleGenderSelect}
-            containerStyles="mt-7"
-            labelStyles="text-white"
+          <FormField
+            title="Gender"
+            value={form.CollabGender}
+            handleChangeText={(e) => setForm({ ...form, CollabGender: e })}
+            mode="gender" // Ensure this mode is handled in FormField
+            otherStyles="mt-7"
           />
-      </View>
-          
-      <View className="absolute bottom-4 right-4">
-           <IconButton
+        </View>
+
+        <View className="absolute bottom-4 right-4">
+          <IconButton
             handlePress={handlePress}
             containerStyles="mt-7"
             isLoading={isSubmitting}
           />
-    </View>
+        </View>
       </ScrollView>
-
     </SafeAreaView>
   );
 };
 
 export default GenderCollaborator;
-

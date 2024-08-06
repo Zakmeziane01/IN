@@ -62,6 +62,12 @@ const RegistrationLayout = () => {
           }}
         />
 
+        <Stack.Screen
+          name="skills"
+          options={{
+            headerShown: false,
+          }}
+        />
 
         
       </Stack>
