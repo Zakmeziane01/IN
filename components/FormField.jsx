@@ -4,7 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { icons } from '../constants';
 import moment from 'moment';
 
-const FormField = ({ title, value, placeholder, handleChangeText, otherStyles, mode = 'text', onPress, ...props }) => {
+const FormField = ({ title, value, placeholder, handleChangeText, otherStyles,otherStyles2, mode = 'text', onPress, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -21,7 +21,7 @@ const FormField = ({ title, value, placeholder, handleChangeText, otherStyles, m
       {mode === 'gender' ? (
         <TabsContainer value={value} handleChangeText={handleChangeText} />
       ) : (
-        <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
+        <View className={`w-full h-16 ${otherStyles2} px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center`}>
           {mode === 'date' ? (
             <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{ flex: 1 }}>
               <Text className="flex-1 text-white font-psemibold text-base">

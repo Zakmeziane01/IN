@@ -3,9 +3,11 @@ import React from 'react'
 
 const bookmark = () => {
   return (
+    <SafeAreaView className="bg-primary h-full ">
     <View>
       <Text>bookmark</Text>
     </View>
+    </SafeAreaView>
   )
 }
 
