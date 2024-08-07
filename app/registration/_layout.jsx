@@ -69,6 +69,7 @@ const RegistrationLayout = () => {
           }}
         /> 
 
+<<<<<<< HEAD
          <Stack.Screen
           name="ChatPart"
           options={{
@@ -76,6 +77,10 @@ const RegistrationLayout = () => {
           }}
         />  
            
+=======
+
+        
+>>>>>>> d51f89d352e29b58b0205602dddca34db458c4f3
       </Stack>
 
       
