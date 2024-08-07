@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Text, View, Alert } from 'react-native';
 import MultiPicker from '../../components/MultiPicker';
-
+import IconButton from '../../components/IconButton'; 
 import { careerPath } from '../../lib/appwrite'; // Import the function
 import { useGlobalContext } from "../../context/GlobalProvider"; // Assuming you use context for user info
 import { router } from "expo-router";
-import IconButton from '../../components/iconButton';
+
+
 
 const CareerPath = () => {
   const { user } = useGlobalContext(); // Get user data from global context
@@ -44,7 +45,7 @@ const CareerPath = () => {
       
       // Call the careerPath function with the formatted string
       await careerPath(user.$id, careerPathString);
-      router.replace("/registration/skills");
+      router.replace("/registration/genderCollaborator");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {

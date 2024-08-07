@@ -1,13 +1,20 @@
-import { View, Text, ScrollView, Alert} from 'react-native';
+import { View, Text, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import FormField from '../../components/FormField';
-
-import CustomButton from "../../components/CustomButton";
+import IconButton from '../../components/IconButton'; 
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { updateUserAdditionalInfo } from '../../lib/appwrite';  // Import the function
+import { updateUserAdditionalInfo } from '../../lib/appwrite';  
+import PickerComponent from '../../components/PickerComponent';
 
+// Helper function to generate options for pickers
+const generateOptions = (start, end) => {
+  return Array.from({ length: end - start + 1 }, (_, i) => ({
+    label: `${start + i}`,
+    value: start + i,
+  }));
+};
 
 const AdditionalInfo = () => {
   const { user } = useGlobalContext();
@@ -16,21 +23,21 @@ const AdditionalInfo = () => {
   const [form, setForm] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
-    birthday: user.birthday ? new Date(user.birthday) : new Date(),
-    gender: user.gender 
+    birthday: user.birthday || '',  
   });
 
-  // Function to handle form submission
-  const submit = async () => {
-    if(form.firstName === "" || form.birthday === ""|| form.gender === ""){
+  const ageOptions = generateOptions(14, 100); // Example options for age picker
+
+  const handlePress = async () => {
+    if (form.firstName === "" || form.birthday === "") {
       Alert.alert("Error", "Please fill in all the fields");
       return;
     }
     
     setIsSubmitting(true);
     try {
-      await updateUserAdditionalInfo(user.$id, form.firstName, form.lastName, form.birthday, form.gender);
-      router.replace("/registration/localization");
+      await updateUserAdditionalInfo(user.$id, form.firstName, form.lastName, form.birthday);
+      router.replace("/registration/ownGender");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -38,13 +45,12 @@ const AdditionalInfo = () => {
     }
   };
 
-
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
-        <View className="w-full flex justify-center h-full px-4 my-6">
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Additional Information
+        <View className="w-full flex items-center flex-1 h-full px-4 my-6">
+          <Text className="text-2xl font-semibold text-white mt-10">
+            Oh hey! Let's start with an intro
           </Text>
 
           <FormField
@@ -58,43 +64,28 @@ const AdditionalInfo = () => {
             title="Last Name"
             value={form.lastName}
             handleChangeText={(e) => setForm({ ...form, lastName: e })}
-            otherStyles="mt-7"
+            otherStyles="mt-9"
           />
 
-          <FormField
-            title="Birthday"
+          <PickerComponent
+            title="Age"
             value={form.birthday}
-            placeholder="Select your birthday"
-            handleChangeText={(date) => setForm({ ...form, birthday: date })}
-            mode="date"
-            otherStyles="mt-7"
+            placeholder="Select your age"
+            onValueChange={(age) => setForm({ ...form, birthday: age })}
+            options={ageOptions}
+            containerStyles="mt-12"
           />
-     
-          <FormField
-            title="Gender"
-            value={form.gender}
-            handleChangeText={(e) => setForm({ ...form, gender: e })}
-            mode="gender"
-            otherStyles="mt-7"
-          />
-
-          <CustomButton
-            title="Submit"
-            handlePress={submit}
-            containerStyles="mt-7"
-            isLoading={isSubmitting}
-          />
-
-          <View className="flex justify-center pt-5 flex-row gap-2">
-            <Link
-              href="/sign-in"
-              className="text-lg font-psemibold text-secondary"
-            >
-              Skip
-            </Link>
-          </View>
         </View>
       </ScrollView>
+
+      <View className="absolute bottom-6 right-7">
+        <IconButton
+          handlePress={handlePress}
+          containerStyles=""
+          iconStyles="text-white"
+          isLoading={isSubmitting}
+        />
+      </View>
     </SafeAreaView>
   );
 }

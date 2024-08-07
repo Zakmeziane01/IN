@@ -4,6 +4,7 @@ import React from "react"
 const CustomButton = ({title, handlePress, containerStyles, textStyles, isLoading}) => {
   return (
     <TouchableOpacity 
+    
     onPress={handlePress}          // This sets the function to be called when the button is pressed.
     activeOpacity={0.7}           // This sets the opacity of the button when it is pressed to 0.7.   (Opacity is a property that defines the transparency level of an element. It ranges from 0 to 1, where: 0 means fully transparent (invisible). 1 means fully opaque (completely visible).)
     className={`bg-secondary rounded-xl min-h-[72px] flex flex-row items-center ${containerStyles} ${

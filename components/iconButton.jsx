@@ -1,5 +1,5 @@
-import { TouchableOpacity, View } from 'react-native';
 import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; 
 
 const IconButton = ({ handlePress, containerStyles, iconStyles, isLoading }) => {
@@ -12,8 +12,8 @@ const IconButton = ({ handlePress, containerStyles, iconStyles, isLoading }) => 
       }`}
       disabled={isLoading}
     >
-      <View className={`flex items-center justify-center ${iconStyles}`}>
-        <FontAwesome name="arrow-right" size={30} color="white"  />
+      <View className={`flex items-center ${iconStyles}`}>
+        <FontAwesome name="arrow-right" size={30} color="white" />
       </View>
     </TouchableOpacity>
   );

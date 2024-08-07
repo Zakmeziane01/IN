@@ -1,10 +1,11 @@
 import { View, Text, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import FormField from '../../components/FormField';
+import TabsContainer from '../../components/TabsContainer';
+import IconButton from '../../components/IconButton'; 
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from "expo-router";
-import IconButton from '../../components/iconButton'; // Adjust the import path as necessary
+
 import { CollaboratorGender } from '../../lib/appwrite'; 
 
 const GenderCollaborator = () => {
@@ -35,23 +36,23 @@ const GenderCollaborator = () => {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>
-        <View className="flex-1 justify-center items-center p-4">
-          <Text className="text-2xl font-semibold mt-10 font-psemibold">
+      <View className="w-full flex justify-center h-full px-4 my-6">
+      <Text className="text-2xl font-semibold text-black mt-10 font-psemibold">
             What type of collaborator are you looking for?
           </Text>
-          <FormField
-            title="Gender"
+
+          <TabsContainer className="flex flex-col"
             value={form.CollabGender}
             handleChangeText={(e) => setForm({ ...form, CollabGender: e })}
-            mode="gender" // Ensure this mode is handled in FormField
+            mode="selection" 
+            options={['Male', 'Female', 'Both']} 
             otherStyles="mt-7"
+            containerStyles="flex-col mt-7"
           />
-        </View>
 
-        <View className="absolute bottom-4 right-4">
           <IconButton
             handlePress={handlePress}
-            containerStyles="mt-7"
+            containerStyles="mt-7 self-end"
             isLoading={isSubmitting}
           />
         </View>

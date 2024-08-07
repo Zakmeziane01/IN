@@ -28,6 +28,13 @@ const RegistrationLayout = () => {
         />
 
         <Stack.Screen
+          name="ownGender"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
           name="localization"
           options={{
             headerShown: false,
@@ -36,13 +43,6 @@ const RegistrationLayout = () => {
 
         <Stack.Screen
           name="allowNotification"
-          options={{
-            headerShown: false,
-          }}
-        />
-
-        <Stack.Screen
-          name="ChatPart"
           options={{
             headerShown: false,
           }}
@@ -67,10 +67,18 @@ const RegistrationLayout = () => {
           options={{
             headerShown: false,
           }}
-        />
+        /> 
 
-        
+         <Stack.Screen
+          name="ChatPart"
+          options={{
+            headerShown: false,
+          }}
+        />  
+           
       </Stack>
+
+      
 
       <StatusBar backgroundColor="#161622" style="light" />
     </>

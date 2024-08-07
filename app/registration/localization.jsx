@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Alert, TextInput, Button, Image } from 'react-native';
+import { View, Text, ScrollView, Alert, TextInput,Image,TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { UserAddressInfo } from '../../lib/appwrite'; // Ensure this path is correct
-import CustomButton from "../../components/CustomButton";
+import IconButton from '../../components/IconButton'; 
 
 const Localization = () => {
   const { user } = useGlobalContext();
@@ -85,7 +85,7 @@ const Localization = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handlePress = async () => {
     if (!location) {
       setErrorMsg('No location to submit.');
       return;
@@ -104,31 +104,36 @@ const Localization = () => {
   };
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="h-full">
       <ScrollView>
         <View className="w-full flex justify-center h-full px-4 my-6">
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Localization
+          <Text className="text-2xl font-semibold text-black mt-10 font-psemibold">
+            Can we get your location?
+          </Text>
+          <Text className="text-1xl font-semibold text-black mt-10 font-psemibold">
+            We need it so we can show you all the great people nearby, (or far away).
           </Text>
 
-          <View className="flex-row justify-between items-center mb-4 mt-10">
-            <Image 
-              source={require('./../../assets/images/location.png')}
-              className="w-8 h-8"
-            />
-            <TextInput 
-              placeholder='Search'
-              value={search}
-              onChangeText={setSearch}
-              className="border border-purple-500 p-2 rounded-full pl-4 w-1/3 mx-2"
-            />
-            <TextInput 
-              placeholder='Postcode'
-              value={postcode}
-              onChangeText={setPostcode}
-              className="border border-purple-500 p-2 rounded-full pl-4 w-1/3 mx-2"
-            />
-          </View>
+      <View className="flex-row justify-between items-center mb-4 mt-10">
+          <Image 
+           source={require('./../../assets/images/location.png')}
+           className="w-8 h-8"
+           />
+        <View className="flex-row items-center space-x-3">
+          <TextInput 
+          placeholder='Search'
+          value={search}
+          onChangeText={setSearch}
+         className="border border-black p-2 rounded-full text-center flex-1"
+        />
+        <TextInput 
+        placeholder='Postcode'
+        value={postcode}
+        onChangeText={setPostcode}
+        className="border border-black p-2 rounded-full text-center flex-1"
+        />
+      </View>
+    </View>
 
         <View className="flex-1">
             {errorMsg ? (
@@ -155,35 +160,31 @@ const Localization = () => {
               <Text className="text-center">Getting Location...</Text>
             )}
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 16 }}>
-            <Button
-              title="Get my current Location"
-              onPress={getCurrentLocation}
-              color="#6200ee"
-            />
-            <Button
-              title="Search Location"
-              onPress={handleSearch}
-              color="#6200ee"
-            />
+
+          <View className="flex-row justify-around mt-4">
+              <TouchableOpacity
+                onPress={getCurrentLocation}
+                className="border border-black p-2 rounded-full flex-1"
+              >
+                <Text className="text-center text-black">Get my current Location</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSearch}
+                className="border border-black p-2 rounded-full flex-1"
+              >
+                <Text className="text-center text-black">Search Location</Text>
+              </TouchableOpacity>
           </View>
         </View>
 
-          <CustomButton
-            title="Submit"
-            handlePress={handleSubmit}
-            containerStyles="mt-7"
-            isLoading={isSubmitting}
-          />
-
-          <View className="flex justify-center pt-5 flex-row gap-2">
-            <Link
-              href="/allowNotification"
-              className="text-lg font-psemibold text-secondary"
-            >
-              Skip
-            </Link>
-          </View>
+        <View className="absolute bottom-6 right-7">
+        <IconButton
+          handlePress={handlePress}
+          containerStyles=""
+          iconStyles="text-white"
+          isLoading={isSubmitting}
+        />
+      </View>
         </View>
       </ScrollView>
     </SafeAreaView>
