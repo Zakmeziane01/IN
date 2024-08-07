@@ -63,25 +63,37 @@ const RegistrationLayout = () => {
         />
 
         <Stack.Screen
+          name="ownCareer"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+
+        <Stack.Screen
+          name="workPositions"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+
+
+
+        <Stack.Screen
           name="skills"
           options={{
             headerShown: false,
           }}
         /> 
 
-<<<<<<< HEAD
+
          <Stack.Screen
           name="ChatPart"
           options={{
             headerShown: false,
           }}
         />  
-           
-=======
-
-        
->>>>>>> d51f89d352e29b58b0205602dddca34db458c4f3
-      </Stack>
+    
+         </Stack>
 
       
 
