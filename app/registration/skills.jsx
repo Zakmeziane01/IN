@@ -38,18 +38,18 @@ const Skills = () => {
  
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-primary h-full ">
     <View>
-      <Text className="text-base text-black-100 font-pmedium">Which skills best define you?</Text>
+      <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">Which skills best define you?</Text>
 
-      <FormField  
+      <FormField 
             title="generalSkills"
             value={form.generalSkills}
             handleChangeText={(e) => setForm({ ...form, generalSkills: e })}
             otherStyles="mt-10"
           />
 
-          <FormField
+          <FormField className= ""
             title="aboutYou"
             value={form.lastName}
             handleChangeText={(e) => setForm({ ...form, aboutYou: e })}
