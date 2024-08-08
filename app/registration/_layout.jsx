@@ -63,6 +63,42 @@ const RegistrationLayout = () => {
         />
 
         <Stack.Screen
+          name="ownCareer"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+
+        <Stack.Screen
+          name="workPositions"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+
+        <Stack.Screen
+          name="academicPath"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+
+        <Stack.Screen
+          name="academicPath"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+           
+        <Stack.Screen
+          name="projectType"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+
+
+        <Stack.Screen
           name="skills"
           options={{
             headerShown: false,
@@ -70,8 +106,14 @@ const RegistrationLayout = () => {
         /> 
 
 
-        
-      </Stack>
+         <Stack.Screen
+          name="ChatPart"
+          options={{
+            headerShown: false,
+          }}
+        />  
+    
+         </Stack>
 
       
 

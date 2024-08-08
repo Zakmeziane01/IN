@@ -25,7 +25,7 @@ const GenderCollaborator = () => {
     setIsSubmitting(true);
     try {
       await CollaboratorGender(user.$id, form.CollabGender);
-      router.replace(""); // Adjust the route if necessary
+      router.replace("/registration/ownCareer"); 
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
