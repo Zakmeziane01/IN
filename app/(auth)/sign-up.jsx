@@ -53,9 +53,6 @@ const SignUp = () => {
         
       <View
           className="w-full flex justify-center h-full px-4 my-6"
-          style={{
-            
-          }}
         >
           <Image
             source={images.logo}

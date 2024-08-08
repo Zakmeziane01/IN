@@ -76,6 +76,26 @@ const RegistrationLayout = () => {
           }}
         /> 
 
+        <Stack.Screen
+          name="academicPath"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+
+        <Stack.Screen
+          name="academicPath"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+           
+        <Stack.Screen
+          name="projectType"
+          options={{
+            headerShown: false,
+          }}
+        /> 
 
 
         <Stack.Screen
