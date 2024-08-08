@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {router } from "expo-router";
 import FormField from '../../components/FormField';
-import IconButton from '../../components/iconButton';
 import { useGlobalContext } from "../../context/GlobalProvider";
 import {userId} from '../../lib/appwrite';
 

@@ -34,7 +34,7 @@ const GenderCollaborator = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-primary h-full ">
       <ScrollView>
       <View className="w-full flex justify-center h-full px-4 my-6">
       <Text className="text-2xl font-semibold text-black mt-10 font-psemibold">
