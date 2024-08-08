@@ -36,7 +36,7 @@ export default function  App() {
           <View>
             <CustomButton
              title="Create account"      // This sets the button's label to "Continue with Email".
-             handlePress={() => router.push("/sign-in")}          //This is an empty function that will handle the button press event.
+             handlePress={() => router.push("/home")}          //This is an empty function that will handle the button press event.
              containerStyles=" justify-center items-center w-full mt-9 "
              textStyles={""}
             /> 
