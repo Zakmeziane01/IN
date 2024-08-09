@@ -8,8 +8,6 @@ import { images } from "../constants";
 import CustomButton from '../components/CustomButton';
 import { useGlobalContext } from '../context/GlobalProvider'
 
-//ScrollView: Adjusted contentContainerStyle to { flexGrow: 1 } to allow it to grow and use the available space.
-//Text Component: Added absolute positioning with bottom-0 to place it at the bottom of the screen. Added w-full to ensure it spans the full width of the screen.
 
 export default function  App() {
   
@@ -39,13 +37,7 @@ export default function  App() {
              </Text>
           </View>
 
-          <View>
 
-
-           
-
-            
-          </View>
 
                       
           <Text className="text-sm font-pregular text-gray-100 text-center mb-4 absolute bottom-0 w-full ">
