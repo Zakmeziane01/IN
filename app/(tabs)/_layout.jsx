@@ -1,8 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { Redirect, Tabs } from "expo-router";
 import { View, Text,Image} from "react-native";
-
-import {icons} from  "../../constants";    
+import { useGlobalContext } from "../../context/GlobalProvider";
+import {icons} from  "../../constants"; 
+import Loader from "../../components/Loader";   
 
 const TabIcon = ({ icon, color, name, focused }) => {       //Define a function-al component named TabIcon that takes four props: icon, color, name, and fo-cused.
 
@@ -12,7 +13,7 @@ const TabIcon = ({ icon, color, name, focused }) => {       //Define a function-
         source={icon}   //source={icon}: Set the source of the image using the icon prop.
         resizeMode="contain"
         tintColor={color}
-        className="w-6 h-6"
+        className="w-3 h-3"
       />
       <Text
       className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
@@ -22,26 +23,31 @@ const TabIcon = ({ icon, color, name, focused }) => {       //Define a function-
       </Text>
       
     </View>
-  );
+  );           
 };
 
-const TabsLayout = () => {    
+const TabsLayout = () => {   
+  
+  
+  const { loading, isLogged } = useGlobalContext();
+  if (!loading && !isLogged) return <Redirect href="/sign-in" />;
+  
   return (
     <>
-
-<Tabs
+    <Tabs
         screenOptions={{
           tabBarActiveTintColor: "#FFA001",
           tabBarInactiveTintColor: "#CDCDE0",
           tabBarShowLabel: false,
+          headerShown: false,
           tabBarStyle: {
-            backgroundColor: "#161622",
+            backgroundColor: "white",
             borderTopWidth: 1,
-            borderTopColor: "#232533",
+            borderTopColor: "white",
             height: 84,
           },
-     }}
-     >              
+        }}
+      >          
     
     <Tabs.Screen
           name="home"
@@ -65,7 +71,7 @@ const TabsLayout = () => {
           options={{
             title: "Bookmark",
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
+            tabBarIcon: ({ color, focused }) => (         
               <TabIcon
                 icon={icons.bookmark}
                 color={color}
@@ -107,7 +113,10 @@ const TabsLayout = () => {
           }}
         />
 </Tabs>
-     
+  
+
+
+<Loader isLoading={loading} />
 <StatusBar backgroundColor="#161622" style="light" />
     </>
   );

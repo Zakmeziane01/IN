@@ -1,10 +1,9 @@
 import { View, Text,ScrollView, Image, Alert,Dimensions} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Link,router} from "expo-router"
-
+import { router, Link } from 'expo-router';
 import { images } from "../../constants";
-import {createUser} from "../../lib/appwrite"
+import {createUser, logOut, getCurrentUser} from "../../lib/appwrite"
 import FormField from '../../components/FormField';
 import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";  // we use global context state when our user has logged in and automatically redirect them to the homapage  
@@ -12,8 +11,9 @@ import { useGlobalContext } from "../../context/GlobalProvider";  // we use glob
 
 
 const SignUp = () => {
+  
   const { setUser, setIsLogged } = useGlobalContext();
-
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({
     username: "",
@@ -32,11 +32,15 @@ const SignUp = () => {
     
     setIsSubmitting(true);
     try {
+      
+
+
       // Call createUser function with form data
       const result = await createUser(form.email, form.password, form.username)
       setUser(result)
-      setIsLogged(true);
-      router.replace("/registration/welcomeScreen")
+      setIsLogged(false);
+
+      router.replace("/welcomeScreen")
       
     } catch (error) {
       Alert.alert("Error",error.message)
@@ -48,11 +52,20 @@ const SignUp = () => {
    
 
   return (
-    <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
+    <SafeAreaView className="bg-white h-full">
+     <ScrollView
+        contentContainerStyle={{
+          height: "100%",
+          alignItems: 'center',
+          paddingHorizontal: 16,
+       }}
+       >
         
       <View
           className="w-full flex justify-center h-full px-4 my-6"
+          style={{
+            
+          }}
         >
           <Image
             source={images.logo}

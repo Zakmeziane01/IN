@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import FormField from '../../components/FormField';
 import IconButton from '../../components/IconButton'; 
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { updateUserAdditionalInfo } from '../../lib/appwrite';  
+import { updateUserAttribute } from '../../lib/appwrite';
 import PickerComponent from '../../components/PickerComponent';
 
 // Helper function to generate options for pickers
@@ -19,25 +19,29 @@ const generateOptions = (start, end) => {
 const AdditionalInfo = () => {
   const { user } = useGlobalContext();
 
+  // Separate state variables for each form field
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [birthday, setBirthday] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [form, setForm] = useState({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    birthday: user.birthday || '',  
-  });
 
-  const ageOptions = generateOptions(14, 100); // Example options for age picker
+  const ageOptions = generateOptions(14, 100);
 
   const handlePress = async () => {
-    if (form.firstName === "" || form.birthday === "") {
+    if (firstName === "" || birthday === "") {
       Alert.alert("Error", "Please fill in all the fields");
       return;
     }
     
     setIsSubmitting(true);
     try {
-      await updateUserAdditionalInfo(user.$id, form.firstName, form.lastName, form.birthday);
-      router.replace("/registration/ownGender");
+
+      const formattedBirthday = String(birthday); // Ensure birthday is a string
+      await updateUserAttribute(user.$id, 'firstName', firstName);
+      await updateUserAttribute(user.$id, 'lastName', lastName);
+      await updateUserAttribute(user.$id, 'birthday', formattedBirthday);
+      
+      router.push("/ownGender");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -46,40 +50,47 @@ const AdditionalInfo = () => {
   };
 
   return (
-    <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
+    <SafeAreaView className="bg-white h-full">
+    <ScrollView
+     contentContainerStyle={{
+       height: "100%",
+       marginHorizontal: 20,
+       paddingTop:120
+    }}
+    >
         <View className="w-full flex items-center flex-1 h-full px-4 my-6">
-          <Text className="text-2xl font-semibold text-white mt-10">
+          <Text className="text-2xl font-semibold text-black mt-10">
             Oh hey! Let's start with an intro
           </Text>
 
           <FormField
             title="First Name"
-            value={form.firstName}
-            handleChangeText={(e) => setForm({ ...form, firstName: e })}
+            value={firstName}
+            handleChangeText={setFirstName} // Directly setting the state
             otherStyles="mt-10"
           />
 
           <FormField
             title="Last Name"
-            value={form.lastName}
-            handleChangeText={(e) => setForm({ ...form, lastName: e })}
+            value={lastName}
+            handleChangeText={setLastName} // Directly setting the state
             otherStyles="mt-9"
           />
 
           <PickerComponent
             title="Age"
-            value={form.birthday}
+            value={birthday}
             placeholder="Select your age"
-            onValueChange={(age) => setForm({ ...form, birthday: age })}
+            onValueChange={setBirthday} // Directly setting the state
             options={ageOptions}
             containerStyles="mt-12"
           />
+
         </View>
       </ScrollView>
 
-      <View className="absolute bottom-6 right-7">
-        <IconButton
+      <View className="">
+       <IconButton
           handlePress={handlePress}
           containerStyles=""
           iconStyles="text-white"

@@ -6,9 +6,6 @@ const RegistrationLayout = () => {
   const { loading, isLogged } = useGlobalContext();
 
   // Redirect if not logged in
-  if (!loading && !isLogged) {
-    return <Redirect href="/sign-in" />;
-  }
 
   return (
     <>
@@ -48,6 +45,22 @@ const RegistrationLayout = () => {
           }}
         />
 
+     <Stack.Screen
+          name="uploadPhotos"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        
+     <Stack.Screen
+          name="uploadProject"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+
         <Stack.Screen
           name="careerPath"
           options={{
@@ -82,16 +95,16 @@ const RegistrationLayout = () => {
             headerShown: false,
           }}
         /> 
-
+           
         <Stack.Screen
-          name="academicPath"
+          name="projectType"
           options={{
             headerShown: false,
           }}
         /> 
-           
+
         <Stack.Screen
-          name="projectType"
+          name="workforceSize"
           options={{
             headerShown: false,
           }}
@@ -104,6 +117,8 @@ const RegistrationLayout = () => {
             headerShown: false,
           }}
         /> 
+
+
 
 
          <Stack.Screen

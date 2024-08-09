@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, View, Alert } from 'react-native';
 import MultiPicker from '../../components/MultiPicker';
 import IconButton from '../../components/IconButton'; 
-import { careerPath } from '../../lib/appwrite'; // Import the function
-import { useGlobalContext } from "../../context/GlobalProvider"; // Assuming you use context for user info
+import { updateUserAttribute } from '../../lib/appwrite'; // Updated import
+import { useGlobalContext } from "../../context/GlobalProvider"; 
 import { router } from "expo-router";
-
-
+import { ScrollView } from 'react-native-web';
 
 const CareerPath = () => {
-  const { user } = useGlobalContext(); // Get user data from global context
+  const { user } = useGlobalContext(); 
   const [selectedValues, setSelectedValues] = useState(['Web-developer']);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,12 +39,11 @@ const CareerPath = () => {
     
     setIsSubmitting(true);
     try {
-      // Convert the array of selected values into a comma-separated string
-      const careerPathString = selectedValues.join(', ');                //Convert Array to String: selectedValues.join(', ') transforms the array into a comma-separated string. This way, you ensure that you're sending a valid string format to the Appwrite function.
+      const careerPathString = selectedValues.join(', '); // Convert array to string
       
-      // Call the careerPath function with the formatted string
-      await careerPath(user.$id, careerPathString);
-      router.replace("/registration/genderCollaborator");
+      // Use the new updateUserAttribute function
+      await updateUserAttribute(user.$id, 'careerPath', careerPathString);
+      router.push("/genderCollaborator");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -53,11 +51,16 @@ const CareerPath = () => {
     }
   };
 
-
-
-
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="bg-white h-full">
+    <ScrollView
+     contentContainerStyle={{
+       height: "100%",
+       marginHorizontal: 20,
+       paddingTop:120
+    }}
+    >
+      
       <View className="flex-1 justify-center items-center p-4">
         <Text className="text-xl font-bold mb-4">What Inspires you?</Text>
         <MultiPicker
@@ -74,7 +77,9 @@ const CareerPath = () => {
           isLoading={isSubmitting}
         />
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
+
 export default CareerPath;

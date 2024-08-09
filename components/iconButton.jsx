@@ -7,7 +7,7 @@ const IconButton = ({ handlePress, containerStyles, iconStyles, isLoading }) => 
     <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.7}
-      className={`bg-primary rounded-xl min-h-[72px] flex flex-row items-center justify-center ${containerStyles} ${
+      className={`bg-black rounded-xl  flexn items-center justify-center ${containerStyles} ${
         isLoading ? "opacity-50" : ""
       }`}
       disabled={isLoading}

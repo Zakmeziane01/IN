@@ -1,38 +1,46 @@
-import React, {useState} from 'react';
+import React, { useState} from 'react';
 import { View, Text,ScrollView, Image,Alert,Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Link,router} from "expo-router"
-import { images } from "../../constants";
 
+import { images } from "../../constants";
 import FormField from '../../components/FormField';
 import CustomButton from "../../components/CustomButton";
-
-import { getCurrentUser, signIn } from "../../lib/appwrite";
+import { getCurrentUser, signIn, logOut} from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";   
 
 
 const SignIn = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
+  const { setUser, setIsLogged} = useGlobalContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
+
+
   const submit = async () => {  //called submit on click 
+    
     if(form.email == "" || form.password === ""){
       Alert.alert("Error", "Please fill in all the fields")
     }
     
     setIsSubmitting(true);
+
     try {
+
+
+    //  await logOut();
+
+      
+  
+
       await signIn(form.email, form.password);
       const result = await getCurrentUser();
       setUser(result);
       setIsLogged(true);
-
-      Alert.alert("Success", "user signed in successfully");
-      router.replace("/home")
+      router.push("/additionalInfo")
     } catch (error) {
       Alert.alert("Error",error.message)
     } finally {
@@ -42,13 +50,19 @@ const SignIn = () => {
    
 
   return (
-    <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
+    <SafeAreaView className="bg-white h-full">
+     <ScrollView
+        contentContainerStyle={{
+          height: "60%",
+          alignItems: 'center',
+          paddingHorizontal: 16,
+       }}
+       >
         
       <View
           className="w-full flex justify-center h-full px-4 my-6"
           style={{
-            
+            minHeight: Dimensions.get("window").height - 100,
           }}
         >
           <Image

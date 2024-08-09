@@ -1,12 +1,12 @@
+import { View, Text, ScrollView, Alert, TextInput, Image, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Alert, TextInput,Image,TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from "expo-router";
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { UserAddressInfo } from '../../lib/appwrite'; // Ensure this path is correct
-import IconButton from '../../components/IconButton'; 
+import { updateUserAttribute } from '../../lib/appwrite';
+import IconButton from '../../components/IconButton';
 
 const Localization = () => {
   const { user } = useGlobalContext();
@@ -50,7 +50,7 @@ const Localization = () => {
       await saveLocation(currentLocation.coords.latitude, currentLocation.coords.longitude);
     } catch (error) {
       setErrorMsg('Error getting current location');
-    } 
+    }
   };
 
   const handleSearch = async () => {
@@ -79,7 +79,9 @@ const Localization = () => {
 
   const saveLocation = async (latitude, longitude) => {
     try {
-      await UserAddressInfo(user.$id, latitude, longitude);
+      // Ensure latitude and longitude are converted to strings if needed
+      await updateUserAttribute(user.$id, 'latitude', String(latitude));
+      await updateUserAttribute(user.$id, 'longitude', String(longitude));
     } catch (error) {
       Alert.alert("Error", error.message);
     }
@@ -95,7 +97,7 @@ const Localization = () => {
 
     try {
       await saveLocation(location.coords.latitude, location.coords.longitude);
-      router.replace("/registration/careerPath"); 
+      router.replace("/genderCollaborator");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -114,28 +116,28 @@ const Localization = () => {
             We need it so we can show you all the great people nearby, (or far away).
           </Text>
 
-      <View className="flex-row justify-between items-center mb-4 mt-10">
-          <Image 
-           source={require('./../../assets/images/location.png')}
-           className="w-8 h-8"
-           />
-        <View className="flex-row items-center space-x-3">
-          <TextInput 
-          placeholder='Search'
-          value={search}
-          onChangeText={setSearch}
-         className="border border-black p-2 rounded-full text-center flex-1"
-        />
-        <TextInput 
-        placeholder='Postcode'
-        value={postcode}
-        onChangeText={setPostcode}
-        className="border border-black p-2 rounded-full text-center flex-1"
-        />
-      </View>
-    </View>
+          <View className="flex-row justify-between items-center mb-4 mt-10">
+            <Image 
+              source={require('./../../assets/images/location.png')}
+              className="w-8 h-8"
+            />
+            <View className="flex-row items-center space-x-3">
+              <TextInput 
+                placeholder='Search'
+                value={search}
+                onChangeText={setSearch}
+                className="border border-black p-2 rounded-full text-center flex-1"
+              />
+              <TextInput 
+                placeholder='Postcode'
+                value={postcode}
+                onChangeText={setPostcode}
+                className="border border-black p-2 rounded-full text-center flex-1"
+              />
+            </View>
+          </View>
 
-        <View className="flex-1">
+          <View className="flex-1">
             {errorMsg ? (
               <Text className="text-red-500 text-center mb-4">Error: {errorMsg}</Text>
             ) : location ? (
@@ -160,8 +162,7 @@ const Localization = () => {
               <Text className="text-center">Getting Location...</Text>
             )}
 
-
-          <View className="flex-row justify-around mt-4">
+            <View className="flex-row justify-around mt-4">
               <TouchableOpacity
                 onPress={getCurrentLocation}
                 className="border border-black p-2 rounded-full flex-1"
@@ -174,17 +175,17 @@ const Localization = () => {
               >
                 <Text className="text-center text-black">Search Location</Text>
               </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        <View className="absolute bottom-6 right-7">
-        <IconButton
-          handlePress={handlePress}
-          containerStyles=""
-          iconStyles="text-white"
-          isLoading={isSubmitting}
-        />
-      </View>
+          <View className="absolute bottom-6 right-7">
+            <IconButton
+              handlePress={handlePress}
+              containerStyles=""
+              iconStyles="text-white"
+              isLoading={isSubmitting}
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

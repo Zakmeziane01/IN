@@ -4,43 +4,42 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from "expo-router";
 import TabsContainer from '../../components/TabsContainer';
 import IconButton from '../../components/IconButton'; 
-
+import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { UserCareer } from '../../lib/appwrite'; 
+import { updateUserAttribute } from '../../lib/appwrite'; // Updated import
 
 const OwnCareer = () => {
   const { user } = useGlobalContext();
-
+  const [career, setCareer] = useState(user.career || ''); // Initialize with user's current career or empty string
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [form, setForm] = useState({
-    career: user.career
-  });
 
   // Function to handle form submission
   const handlePress = async () => {
-    if (form.career === "") { // Check if the career field is empty
+    if (!career) { // Check if the career field is empty
       Alert.alert("Error", "Please select an option");
       return;
     }
     
     setIsSubmitting(true);
     try {
-      await UserCareer(user.$id, form.career);
+      // Update the user's career attribute
+      await updateUserAttribute(user.$id, 'career', career);
 
       // Navigate based on selected career
-      if (form.career === 'Student') {
-        router.replace("/registration/academicPath");
-      } 
-      else if (form.career === 'Work part-time' || form.career === 'Work full-time') {
-        router.replace("/registration/workPositions");
-      } 
-      
-      else if (form.career === 'Gap year') {
-        router.replace(""); // Assuming you have a path for Gap Year
-      } 
-      else {
-        // Handle unexpected career options
-        Alert.alert("Error", "Unexpected career option selected");
+      switch (career) {
+        case 'Student':
+          router.replace("/academicPath");
+          break;
+        case 'Work part-time':
+        case 'Work full-time':
+          router.replace("/workPositions");
+          break;
+        case 'Gap year':
+          router.replace("/projectType"); // Assuming you have a path for Gap Year
+          break;
+        default:
+          Alert.alert("Error", "Unexpected career option selected");
+          break;
       }
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -50,16 +49,23 @@ const OwnCareer = () => {
   };
 
   return (
-    <SafeAreaView className="h-full">
-      <ScrollView>
+    <SafeAreaView className="bg-white h-full">
+    <ScrollView
+     contentContainerStyle={{
+       height: "100%",
+       marginHorizontal: 20,
+       paddingTop:120
+    }}
+    >
+      
         <View className="w-full flex justify-center h-full px-4 my-6">
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            What do you do for a living
+            What do you do for a living?
           </Text>
 
           <TabsContainer 
-            value={form.career}
-            handleChangeText={(e) => setForm({ ...form, career: e })}
+            value={career}
+            handleChangeText={setCareer} // Directly update the career state
             mode="selection"
             options={['Student', 'Work part-time', 'Work full-time', 'Gap year']}
             containerStyles="flex-col mt-4"
@@ -67,14 +73,13 @@ const OwnCareer = () => {
         </View>
       </ScrollView>
 
-      <View className="absolute bottom-6 right-7">
+
         <IconButton
           handlePress={handlePress}
           containerStyles=""
           iconStyles="text-white"
           isLoading={isSubmitting}
         />
-      </View>
     </SafeAreaView>
   );
 }
