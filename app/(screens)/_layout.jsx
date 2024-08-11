@@ -15,6 +15,14 @@ const AuthLayout = () => {
             headerShown: false,
           }}
         />
+
+      <Stack.Screen
+          name="chatDetailsScreen"
+          options={{
+            headerShown: false,
+          }}
+        />
+
       </Stack>
 
    

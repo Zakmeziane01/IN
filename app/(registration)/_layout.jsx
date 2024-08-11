@@ -130,16 +130,6 @@ const RegistrationLayout = () => {
             headerShown: false,
           }}
         /> 
-
-
-
-
-         <Stack.Screen
-          name="ChatPart"
-          options={{
-            headerShown: false,
-          }}
-        />  
     
          </Stack>
 
