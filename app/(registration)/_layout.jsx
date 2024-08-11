@@ -1,10 +1,8 @@
 import { Stack, Redirect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useGlobalContext } from "../../context/GlobalProvider";
+
 
 const RegistrationLayout = () => {
-  const { loading, isLogged } = useGlobalContext();
-
   // Redirect if not logged in
 
   return (
@@ -19,6 +17,21 @@ const RegistrationLayout = () => {
         
         <Stack.Screen
           name="additionalInfo"
+          options={{
+            headerShown: false,
+          }}
+        />
+      
+        <Stack.Screen
+          name="acceptPrivacy"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+
+       <Stack.Screen
+          name="allDone"
           options={{
             headerShown: false,
           }}

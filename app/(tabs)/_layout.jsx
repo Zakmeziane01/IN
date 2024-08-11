@@ -30,7 +30,8 @@ const TabsLayout = () => {
   
   
   const { loading, isLogged } = useGlobalContext();
-  if (!loading && !isLogged) return <Redirect href="/sign-in" />;
+
+ // if (!loading && !isLogged) return <Redirect href="/sign-in" />;
   
   return (
     <>

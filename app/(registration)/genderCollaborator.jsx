@@ -1,37 +1,44 @@
-import { View, Text, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TabsContainer from '../../components/TabsContainer';
 import IconButton from '../../components/IconButton'; 
-import { useGlobalContext } from "../../context/GlobalProvider";
-import { router } from "expo-router";
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { useUserContext } from '../../context/UserContext'; // Import useUserContext
+import { router } from 'expo-router';
 import { updateUserAttribute } from '../../lib/appwrite';
 
 const GenderCollaborator = () => {
   const { user } = useGlobalContext();
-  
+  const { updateResponse } = useUserContext(); // Access updateResponse from user context
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [collabGender, setCollabGender] = useState(user.CollabGender || "");
+  const [collabGender, setCollabGender] = useState(user.CollabGender || '');
 
   const handlePress = async () => {
-    if (collabGender === "") {
-      Alert.alert("Error", "Please select a collaborator gender");
+    if (collabGender === '') {
+      Alert.alert('Error', 'Please select a collaborator gender');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await updateUserAttribute(user.$id, 'CollabGender', collabGender);
-      router.replace("/ownCareer"); 
+      // Update user attribute
+      await updateUserAttribute(user.userId, 'CollabGender', collabGender);
+      
+      // Update the context with the selected collaborator gender
+      updateResponse('CollabGender', collabGender);
+
+      router.push('/ownCareer'); 
     } catch (error) {
-      Alert.alert("Error", error.message);
+      Alert.alert('Error', error.message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView className="flex-1 bg-white">
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -50,16 +57,19 @@ const GenderCollaborator = () => {
             handleChangeText={setCollabGender}
             mode="selection" 
             options={['Male', 'Female', 'Both']} 
+            containerStyles="mb-6"
           />
         </View>      
 
-        <IconButton
+
+      </ScrollView>
+
+      <IconButton
           handlePress={handlePress}
           containerStyles="self-center mt-10"
           iconStyles="text-white"
           isLoading={isSubmitting}
         />
-      </ScrollView>
     </SafeAreaView>
   );
 };

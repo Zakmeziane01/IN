@@ -1,14 +1,17 @@
-import { View, Text, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from "expo-router";
+import { router } from 'expo-router';
 import TabsContainer from '../../components/TabsContainer';
 import IconButton from '../../components/IconButton'; 
-import { useGlobalContext } from "../../context/GlobalProvider";
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { useUserContext } from '../../context/UserContext';
 import { updateUserAttribute } from '../../lib/appwrite';
 
 const OwnGender = () => {
   const { user } = useGlobalContext();
+  const { updateResponse } = useUserContext();
+
   const [gender, setGender] = useState(user.gender || ''); // Initialize with user's gender or empty string
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -22,8 +25,12 @@ const OwnGender = () => {
     setIsSubmitting(true);
     try {
       // Update the user's gender attribute
-      await updateUserAttribute(user.$id, 'gender', gender);
-      router.push("/allowNotification");
+      await updateUserAttribute(user.userId,  'gender', gender);
+
+      // Update the context with the selected gender
+      updateResponse('gender', gender);
+
+      router.push("/localization");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -36,34 +43,34 @@ const OwnGender = () => {
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: 'space-between',
-          paddingHorizontal: 20,
-          paddingVertical: 40,
+          marginHorizontal: 30,
+          justifyContent: 'center', // Center content vertically
+          paddingVertical: 20 // Added padding for better spacing
         }}
       >
-        <View>
-          <Text className="text-black font-bold text-2xl mb-5">
-            Select your gender
-          </Text>
+        <Text className="text-black font-bold text-2xl mb-5">
+          Select your gender
+        </Text>
 
-          <TabsContainer 
-            value={gender}
-            handleChangeText={setGender} // Directly update the gender state
-            mode="selection"
-            options={['Male', 'Female', 'Others']}
-            containerStyles="flex-col mt-4"
-          />
-        </View>
+        <TabsContainer 
+          value={gender}
+          handleChangeText={setGender}
+          mode="selection"
+          options={['Male', 'Female', 'Others']}
+          containerStyles="flex-col mt-4"
+        />
+      </ScrollView>
 
+      <View className="px-4">
         <IconButton
           handlePress={handlePress}
-          containerStyles="self-center mt-10"
+          containerStyles="bg-black mb-4"
           iconStyles="text-white"
           isLoading={isSubmitting}
         />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
-}
+};
 
 export default OwnGender;

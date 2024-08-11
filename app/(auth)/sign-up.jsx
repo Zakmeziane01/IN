@@ -37,8 +37,9 @@ const SignUp = () => {
 
       // Call createUser function with form data
       const result = await createUser(form.email, form.password, form.username)
-      setUser(result)
-      setIsLogged(false);
+      
+      setUser(result.targets[0])
+      setIsLogged(true);
 
       router.replace("/welcomeScreen")
       

@@ -1,20 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, ScrollView, Alert } from 'react-native';
+import { SafeAreaView, View, Text, ScrollView, Alert, Image } from 'react-native';
 import SettingButton from '../../components/SettingButton';
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from "expo-router";
 import { getUserAttributes } from '../../lib/appwrite'; // Ensure you have this function
+import { useUserContext } from '../../context/UserContext';
+import * as Location from 'expo-location';
 
 const Home = () => {
   const { user } = useGlobalContext();
   const [userAttributes, setUserAttributes] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [profileImageUri, setProfileImageUri] = useState('');
+  const [address, setAddress] = useState(''); // New state for address
+  const { getResponses } = useUserContext();
 
   useEffect(() => {
     const fetchUserAttributes = async () => {
       try {
-        const attributes = await getUserAttributes(user.$id);
+        const attributes = await getUserAttributes(user.userId);
+        setProfileImageUri(attributes.profileImageUri || ''); 
         setUserAttributes(attributes);
+
+        // Reverse geocoding
+        if (attributes.latitude && attributes.longitude) {
+          const [result] = await Location.reverseGeocodeAsync({
+            latitude: parseFloat(attributes.latitude),
+            longitude: parseFloat(attributes.longitude),
+          });
+          setAddress(result?.city || 'N/A'); // You can format the address as needed
+        }
+
+        const responses = getResponses();
+        setProfileImageUri(responses.profileImageUri || '');
       } catch (error) {
         Alert.alert("Error", "Failed to load user attributes");
       } finally {
@@ -23,7 +41,7 @@ const Home = () => {
     };
 
     fetchUserAttributes();
-  }, [user.$id]);
+  }, [user.userId]);
 
   const handleSettingsPress = () => {
     router.push("/setting");
@@ -35,44 +53,83 @@ const Home = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="p-4">
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 20,
+          paddingBottom: 100,
+        }}
+      >
         <View className="mb-7">
           <SettingButton
             handlePress={handleSettingsPress}
             containerStyles="mb-7"
           />
         </View>
-        <View className="bg-white p-4 rounded-lg shadow-md">
-          <Text className="text-2xl font-bold text-gray-800 mb-2">
-            Welcome, {userAttributes?.firstName || 'User'}
+        <View className="shadow-md">
+          <Text className="font-semibold text-4xl ">
+            {userAttributes?.firstName || 'N/A'}
           </Text>
-          <Text className="text-gray-700 mb-2">
-            <Text className="font-semibold">First Name:</Text> {userAttributes?.firstName || 'N/A'}
+          <Text className="font-pregular text-4xl mt-7 ">
+            {userAttributes?.careerPath || 'N/A'}
           </Text>
-          <Text className="text-gray-700 mb-2">
-            <Text className="font-semibold">Last Name:</Text> {userAttributes?.lastName || 'N/A'}
+
+          <View className={`w-60 h-60 rounded-2xl mt-7 border-2 ${profileImageUri ? 'border-transparent' : 'border-gray-300'} bg-gray-100 flex items-center justify-center mb-4`}>
+            {profileImageUri ? (
+              <Image
+                source={{ uri: profileImageUri }}
+                className="w-full h-full rounded-full"
+              />
+            ) : (
+              <Text className="text-gray-500">No Image</Text>
+            )}
+          </View>
+
+          <View className="border-t-2 border-gray-300 my-4 mt-7" />
+          <Text className="font-pregular text-xl mt-7 ">
+            <Text className="font-psemibold">About Me: </Text>   
+            {userAttributes?.aboutYou || 'N/A'}
           </Text>
-          <Text className="text-gray-700 mb-2">
-            <Text className="font-semibold">Birthday:</Text> {userAttributes?.birthday || 'N/A'}
+
+          <View className="border-t-2 border-gray-300 my-4 mt-7" />
+          <Text className="font-pregular text-xl mt-7 ">
+            <Text className="font-psemibold">Skills: </Text>{userAttributes?.generalSkills || 'N/A'}
           </Text>
-          <Text className="text-gray-700 mb-2">
-            <Text className="font-semibold">Gender:</Text> {userAttributes?.gender || 'N/A'}
+
+          <View className="border-t-2 border-gray-300 my-4 mt-7" />
+          <Text className="font-pregular text-xl mt-7 ">
+            <Text className="font-psemibold">I am looking for: </Text>{userAttributes?.projectDivision || 'N/A'}
           </Text>
-          <Text className="text-gray-700 mb-2">
-            <Text className="font-semibold">Address:</Text> {userAttributes?.address || 'N/A'}
+
+          <View className="border-t-2 border-gray-300 my-4 mt-7" />
+          <Text className="font-pregular text-xl mt-7 ">
+            <Text className="font-psemibold">University: </Text>{userAttributes?.university || 'N/A'}
           </Text>
-          <Text className="text-gray-700 mb-2">
-            <Text className="font-semibold">Career Path:</Text> {userAttributes?.careerPath || 'N/A'}
+
+          <View className="border-t-2 border-gray-300 my-4 mt-7" />
+          <Text className="font-pregular text-xl mt-7 ">
+            <Text className="font-psemibold">Jobs: </Text>{userAttributes?.employmentRoles || 'N/A'}
           </Text>
-          <Text className="text-gray-700 mb-2">
-            <Text className="font-semibold">Collaborative Gender:</Text> {userAttributes?.CollabGender || 'N/A'}
+
+          <View className="border-t-2 border-gray-300 my-4 mt-7" />
+          <Text className="font-pregular text-xl mt-7 ">
+            <Text className="font-psemibold">Language: </Text>  {userAttributes?.languageSpoken || 'N/A'}
           </Text>
-          {/* Add more fields as needed */}
+
+          <View className="border-t-2 border-gray-300 my-4 mt-7" />
+          <Text className="font-pregular text-xl mt-7 ">
+            <Text className="font-psemibold">Age:</Text> {userAttributes?.birthday || 'N/A'} 
+            <Text className="font-psemibold">   Gender: </Text>{userAttributes?.gender || 'N/A'}
+          </Text>
+
+          <View className="border-t-2 border-gray-300 my-4 mt-7" />
+          <Text className="font-pregular text-xl mt-7 ">
+            <Text className="font-psemibold">Address: </Text>{address || 'N/A'}
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-
-export default Home; 
+export default Home;

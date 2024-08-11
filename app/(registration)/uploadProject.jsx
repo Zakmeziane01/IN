@@ -1,107 +1,89 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, Alert, ScrollView, Button, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
-import * as Sharing from 'expo-sharing'; // Allows opening documents in external apps
-import IconButton from '../../components/IconButton'; 
-import { uploadImage, uploadFile, profileImage } from '../../lib/appwrite'; // Import the upload functions
+import UploadButton from '../../components/UploadButton';
+import IconButton from '../../components/IconButton';
+import { router } from 'expo-router';
 
+const UploadDocumentPage = () => {
+  const [files, setFiles] = useState(Array(6).fill(null));
+  const [uploading, setUploading] = useState(false);
 
-const UploadProjectScreen = () => {
-  const [image, setImage] = useState(null);
-  const [document, setDocument] = useState(null);
-  const [projectName, setProjectName] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-
-
-  const openPicker = async (selectType) => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type:
-        selectType === "image"
-          ? ["image/png", "image/jpg"]
-          : ["video/mp4", "video/gif"],
-    });
-
-    if (!result.canceled) {
-      if (selectType === "image") {
-        setForm({
-          ...form,
-          thumbnail: result.assets[0],
-        });
-      }
-
-      if (selectType === "video") {
-        setForm({
-          ...form,
-          video: result.assets[0],
-        });
-      }
-    } else {
-      setTimeout(() => {
-        Alert.alert("Document picked", JSON.stringify(result, null, 2));
-      }, 100);
-    }
+  const handleFilePicked = (index, uri) => {
+    const newFiles = [...files];
+    newFiles[index] = uri;
+    setFiles(newFiles);
   };
 
+  const handleUpload = async () => {
+    const uploadedFilesCount = files.filter(file => file !== null).length;
 
+    if (uploadedFilesCount < 2) {
+      Alert.alert(
+        "Insufficient Uploads",
+        "You need to upload at least two documents to proceed.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
+    setUploading(true);
+    try {
   
-
-  // Function to handle project submission
-
+      console.log("Upload success", files);
+      router.push('/allDone');
+    } catch (error) {
+      console.error("Upload failed", error);
+      Alert.alert(
+        "Upload Failed",
+        "Failed to upload the files. Please try again.",
+        [{ text: "OK" }]
+      );
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-white h-full">
       <ScrollView
         contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'center',
-          paddingHorizontal: 20,
+          height: "30%",
+          marginHorizontal: 30,
         }}
       >
-        <View className="w-full flex justify-center h-full px-4 my-6">
-          <Text className="text-2xl font-semibold text-black mt-10">
-            Upload Project
-          </Text>
+        <Text className="text-3xl font-semibold mt-7 mb-14">
+          Select the documents that best showcase your work
+        </Text>
 
-
-          <TouchableOpacity onPress={() => openPicker("image")}>
-            {form.thumbnail ? (
-              <Image
-                source={{ uri: form.thumbnail.uri }}
-                resizeMode="cover"
-                className="w-full h-64 rounded-2xl"
-              />
-            ) : (
-              <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 flex justify-center items-center flex-row space-x-2">
-                <Image
-                  source={icons.upload}
-                  resizeMode="contain"
-                  alt="upload"
-                  className="w-5 h-5"
-                />
-                <Text className="text-sm text-gray-100 font-pmedium">
-                  Choose a file
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
-
-
-
-
+        <View className="flex flex-wrap flex-row justify-center">
+          {files.map((file, index) => (
+            <UploadButton
+              key={index}
+              onFilePicked={(uri) => handleFilePicked(index, uri)}
+              pickerType="document"
+              buttonText="Pick a file"
+              containerClassName="m-3"
+              buttonClassName="bg-white" 
+              textClassName="text-center text-gray-500"
+              squareSize={100} 
+            />
+          ))}
         </View>
+
+        <Text className="text-red-500 text-center mt-4">
+          You need to upload at least two documents to proceed.
+        </Text>
       </ScrollView>
 
       <IconButton
-        handlePress={handleSubmit}
-        containerStyles="mt-7"
-        isLoading={isSubmitting}
+        handlePress={handleUpload}
+        isLoading={uploading}
+        containerStyles="shadow-lg"
+        iconStyles="text-white"
       />
     </SafeAreaView>
   );
 };
 
-export default UploadProjectScreen;
+export default UploadDocumentPage;

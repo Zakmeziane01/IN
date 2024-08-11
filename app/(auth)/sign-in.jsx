@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import { View, Text,ScrollView, Image,Alert,Dimensions} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Link,router} from "expo-router"
@@ -20,6 +20,8 @@ const SignIn = () => {
 
 
 
+
+
   const submit = async () => {  //called submit on click 
     
     if(form.email == "" || form.password === ""){
@@ -31,16 +33,17 @@ const SignIn = () => {
     try {
 
 
-    //  await logOut();
+
 
       
   
 
       await signIn(form.email, form.password);
       const result = await getCurrentUser();
+      console.log(result)
       setUser(result);
       setIsLogged(true);
-      router.push("/additionalInfo")
+      router.push("/welcomeScreen")
     } catch (error) {
       Alert.alert("Error",error.message)
     } finally {

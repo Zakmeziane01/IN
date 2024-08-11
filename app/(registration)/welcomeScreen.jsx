@@ -8,18 +8,18 @@ const WelcomeScreen = () => {
   return (
     <SafeAreaView className="bg-white h-full">
     
-      <View className="w-full items-center">
-        <Text className="text-sm font-pregular text-black-100 text-center mb-4">
+      <View className="flex-1 items-center mt-7 mr-">
+        <Text className="text-3xl font-semibold  text-black-100 text-center mb-4">
           Let's create your profile
         </Text>
+      </View>
 
-        <CustomButton
+      <CustomButton
           title="Enter basic info"
           handlePress={() => router.push("/additionalInfo")}
-          containerStyles="w-full mt-10"
+          containerStyles="w-full mt-14"
           textStyles="text-center"
         />
-      </View>
     </SafeAreaView>
   );
 };

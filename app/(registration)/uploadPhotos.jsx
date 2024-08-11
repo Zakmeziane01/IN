@@ -1,75 +1,75 @@
 import React, { useState } from 'react';
-import { View, Text, Image, Alert, ScrollView, Button } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as DocumentPicker from 'expo-document-picker';
 import IconButton from '../../components/IconButton'; 
 import { useRouter } from "expo-router";
-import { updataImage } from  '../../lib/appwrite';
 import { useGlobalContext } from "../../context/GlobalProvider";
+import UploadButton from '../../components/UploadButton'; 
+import { useUserContext } from '../../context/UserContext';
+
 
 const ImageUploadScreen = () => {
-  const { user } = useGlobalContext();
-  const [image, setImage] = useState(null);
+  const { user } = useGlobalContext(); 
+  const [fileUri, setFileUri] = useState(null);
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
+  const { updateResponse } = useUserContext();
 
-  const openPicker = async () => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: 'image/*', // This will allow only images
-        copyToCacheDirectory: false,
-      });
-
-      if (result.type === 'success') {
-        setImage(result.uri); // Save the image URI to the state
-      } else {
-        Alert.alert("Cancelled", "No file selected");
-      }
-    } catch (error) {
-      Alert.alert("Error", "An error occurred while picking the file");
-    }
+  const handleFilePicked = (uri) => {
+    setFileUri(uri);
   };
 
   const handleUpload = async () => {
-    if (!image) {
-      Alert.alert("Error", "Please select an image first");
+    if (!fileUri) {
+      alert("Please select a file first!");
       return;
     }
 
     setUploading(true);
-
     try {
-      // Assuming updataImage function takes the user ID and image URI
-      await updataImage(user.$id, image);
-      Alert.alert("Success", "Image uploaded successfully!");
-      router.push('/someNextPage'); // Navigate to another page if necessary
+
+      updateResponse("profileImageUri", fileUri)
+      // const updatedProfile = await createPhotoProfile(fileUri, user.$id);  userId
+     // console.log("Upload success", updatedProfile);
+      router.push('/uploadProject');
     } catch (error) {
-      Alert.alert("Upload Error", error.message);
+      console.error("Upload failed", error);
+      alert("Failed to upload the file. Please try again.");
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white p-4">
-      <ScrollView contentContainerStyle={{ paddingVertical: 20 }}>
-        <View className="mb-6">
-          <Text className="text-xl font-semibold mb-4">Upload Image</Text>
-          <Button title="Pick Image" onPress={openPicker} />
+    <SafeAreaView className="bg-white h-full">
+    <ScrollView
+     contentContainerStyle={{
+       height: "30%",
+       marginHorizontal: 20,
+    }}
+    >
+      
+        <View className="w-full flex justify-center h-full px-4 my-6">
+          <Text className="text-4xl font-semibold">Upload Your profile photo</Text>
         </View>
 
-        {image && (
-          <View className="mb-6">
-            <Image source={{ uri: image }} className="w-full h-64" resizeMode="contain" />
-          </View>
-        )}
+        <UploadButton 
+          onFilePicked={handleFilePicked}
+          pickerType="image" 
+          buttonText="Pick a document"
+          buttonClassName="bg-white p-4 rounded-lg flex items-center justify-center"
+          textClassName="text-white text-center"
+          containerClassName="flex items-center"
+          squareSize={200} // You can change this size based on your need
+        />
 
-        <IconButton
+
+      </ScrollView>
+
+      <IconButton
           handlePress={handleUpload}
-          containerStyles="mt-6"
           isLoading={uploading}
         />
-      </ScrollView>
     </SafeAreaView>
   );
 };

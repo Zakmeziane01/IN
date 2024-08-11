@@ -1,19 +1,20 @@
-import { View, Text, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from "expo-router";
+import { router } from 'expo-router';
 import TabsContainer from '../../components/TabsContainer';
 import IconButton from '../../components/IconButton'; 
-import CustomButton from '../../components/CustomButton';
-import { useGlobalContext } from "../../context/GlobalProvider";
-import { updateUserAttribute } from '../../lib/appwrite'; // Updated import
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { useUserContext } from '../../context/UserContext';
+import { updateUserAttribute } from '../../lib/appwrite';
 
 const OwnCareer = () => {
   const { user } = useGlobalContext();
-  const [career, setCareer] = useState(user.career || ''); // Initialize with user's current career or empty string
+  const { updateResponse } = useUserContext(); 
+
+  const [career, setCareer] = useState(user.career || ''); 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Function to handle form submission
   const handlePress = async () => {
     if (!career) { // Check if the career field is empty
       Alert.alert("Error", "Please select an option");
@@ -23,7 +24,10 @@ const OwnCareer = () => {
     setIsSubmitting(true);
     try {
       // Update the user's career attribute
-      await updateUserAttribute(user.$id, 'career', career);
+      await updateUserAttribute(user.userId, 'career', career);
+
+      // Update the context with the selected career
+      updateResponse('career', career);
 
       // Navigate based on selected career
       switch (career) {
@@ -50,16 +54,15 @@ const OwnCareer = () => {
 
   return (
     <SafeAreaView className="bg-white h-full">
-    <ScrollView
-     contentContainerStyle={{
-       height: "100%",
-       marginHorizontal: 20,
-       paddingTop:120
-    }}
-    >
-      
+      <ScrollView
+        contentContainerStyle={{
+          height: "60%",
+          marginHorizontal: 2,
+          paddingTop: 30
+        }}
+      >
         <View className="w-full flex justify-center h-full px-4 my-6">
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+          <Text className="text-2xl font-semibold text-black mt-10 font-psemibold">
             What do you do for a living?
           </Text>
 
@@ -73,15 +76,14 @@ const OwnCareer = () => {
         </View>
       </ScrollView>
 
-
-        <IconButton
-          handlePress={handlePress}
-          containerStyles=""
-          iconStyles="text-white"
-          isLoading={isSubmitting}
-        />
+      <IconButton
+        handlePress={handlePress}
+        containerStyles="bg-black mb-4"
+        iconStyles="text-white"
+        isLoading={isSubmitting}
+      />
     </SafeAreaView>
   );
-}
+};
 
 export default OwnCareer;

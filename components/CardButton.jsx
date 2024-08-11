@@ -15,7 +15,7 @@ const CardButton = ({ cards, handleCardPress }) => {
           <TouchableOpacity
             key={index}
             onPress={() => handleCardPress(card)}
-            className={`w-[48%] h-55 p-2 rounded-lg border-2 ${
+            className={`w-[48%] h-55 p-2 rounded-lg border-2 mb-3 ${
               card.selected ? 'border-green-600 bg-green-100' : 'border-gray-300'
             }`}
           >
@@ -33,7 +33,7 @@ const CardButton = ({ cards, handleCardPress }) => {
           <TouchableOpacity
             key={index}
             onPress={() => handleCardPress(card)}
-            className={`w-[48%] h-55 p-2 rounded-lg border-2 ${
+            className={`w-[48%] h-55 p-2 rounded-lg border-2 mb-2 ${
               card.selected ? 'border-green-600 bg-green-100' : 'border-gray-300'
             }`}
           >

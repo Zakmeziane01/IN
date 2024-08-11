@@ -3,6 +3,9 @@ import  { useFonts} from "expo-font"
 import { SplashScreen, Stack } from "expo-router";
 import "react-native-url-polyfill/auto";
 import GlobalProvider from "../context/GlobalProvider";
+import { UserProvider } from '../context/UserContext';
+
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -45,7 +48,8 @@ const RootLayout = () => {
   return (
  
 
-  <GlobalProvider>  
+  <GlobalProvider> 
+    <UserProvider>
     <Stack>
     <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -53,6 +57,7 @@ const RootLayout = () => {
     <Stack.Screen name="(registration)" options={{ headerShown: false }} />
     <Stack.Screen name="(screens)" options={{ headerShown: false }} />
     </Stack>
+    </UserProvider> 
   </GlobalProvider>
   )
 }

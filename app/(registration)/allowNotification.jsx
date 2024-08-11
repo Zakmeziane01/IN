@@ -31,6 +31,7 @@ const NotificationScreen = () => {
         }
       }
       Alert.alert('Notification Permission', 'Notifications have been enabled!');
+      router.push("/careerPath"); 
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
@@ -39,7 +40,7 @@ const NotificationScreen = () => {
   };
 
   const handleNotNow = () => {
-    router.push("/uploadPhotos"); 
+    router.push("/careerPath"); 
     } 
 
 

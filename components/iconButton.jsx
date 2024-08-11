@@ -7,13 +7,13 @@ const IconButton = ({ handlePress, containerStyles, iconStyles, isLoading }) => 
     <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.7}
-      className={`bg-black rounded-xl  flexn items-center justify-center ${containerStyles} ${
+      className={`mt-3 mb-3${containerStyles} ${
         isLoading ? "opacity-50" : ""
       }`}
       disabled={isLoading}
     >
-      <View className={`flex items-center ${iconStyles}`}>
-        <FontAwesome name="arrow-right" size={30} color="white" />
+      <View className={`mt-3 mb-3  bg-gray-500 rounded-s-full  ${iconStyles}`}>
+        <FontAwesome name="arrow-right" size={40} color="white" />
       </View>
     </TouchableOpacity>
   );
