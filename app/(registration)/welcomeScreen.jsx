@@ -16,7 +16,7 @@ const WelcomeScreen = () => {
 
       <CustomButton
           title="Enter basic info"
-          handlePress={() => router.push("/additionalInfo")}
+          handlePress={() => router.push("/uploadPhotos")}
           containerStyles="w-full mt-14"
           textStyles="text-center"
         />
