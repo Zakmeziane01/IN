@@ -21,21 +21,6 @@ const RegistrationLayout = () => {
             headerShown: false,
           }}
         />
-      
-        <Stack.Screen
-          name="acceptPrivacy"
-          options={{
-            headerShown: false,
-          }}
-        />
-
-
-       <Stack.Screen
-          name="allDone"
-          options={{
-            headerShown: false,
-          }}
-        />
 
         <Stack.Screen
           name="ownGender"
@@ -43,7 +28,7 @@ const RegistrationLayout = () => {
             headerShown: false,
           }}
         />
-
+      
         <Stack.Screen
           name="localization"
           options={{
@@ -57,22 +42,6 @@ const RegistrationLayout = () => {
             headerShown: false,
           }}
         />
-
-     <Stack.Screen
-          name="uploadPhotos"
-          options={{
-            headerShown: false,
-          }}
-        />
-
-        
-     <Stack.Screen
-          name="uploadProject"
-          options={{
-            headerShown: false,
-          }}
-        />
-
 
         <Stack.Screen
           name="careerPath"
@@ -123,13 +92,43 @@ const RegistrationLayout = () => {
           }}
         /> 
 
-
         <Stack.Screen
           name="skills"
           options={{
             headerShown: false,
           }}
         /> 
+
+        <Stack.Screen
+          name="uploadPhotos"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        
+        <Stack.Screen
+          name="uploadProject"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+
+        <Stack.Screen
+          name="acceptPrivacy"
+          options={{
+            headerShown: false,
+          }}
+        />
+
+
+       <Stack.Screen
+          name="allDone"
+          options={{
+            headerShown: false,
+          }}
+        />
     
          </Stack>
 
