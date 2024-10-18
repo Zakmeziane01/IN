@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Alert, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Alert, TextInput, TouchableOpacity, Image } from 'react-native';
+import { images, stepsBar } from "../../constants";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
@@ -7,12 +8,14 @@ import * as Location from 'expo-location';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { useUserContext } from '../../context/UserContext'; // Import useUserContext
 import { updateUserAttribute } from '../../lib/appwrite';
-import IconButton from '../../components/IconButton';
+import CustomButton from "../../components/CustomButton";
 
 const Localization = () => {
   const { user } = useGlobalContext();
   const { updateResponse } = useUserContext(); // Access updateResponse from user context
-
+  const [isGetLocationPressed, setIsGetLocationPressed] = useState(false);
+  const [isSearchPressed, setIsSearchPressed] = useState(false);
+  
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [search, setSearch] = useState('');
@@ -50,6 +53,7 @@ const Localization = () => {
       setLocation(currentLocation);
       setErrorMsg(null);
 
+      // Reverse geocode to get city name
       await saveLocation(currentLocation.coords.latitude, currentLocation.coords.longitude);
     } catch (error) {
       setErrorMsg('Error getting current location');
@@ -72,7 +76,7 @@ const Localization = () => {
         setLocation(location);
         setErrorMsg(null);
 
-        await saveLocation(latitude, longitude, search.trim());
+        await saveLocation(latitude, longitude);
       } else {
         setErrorMsg('Location not found.');
       }
@@ -81,15 +85,15 @@ const Localization = () => {
     }
   };
 
-  const saveLocation = async (latitude, longitude, cityOrPostcode = '') => {
+  const saveLocation = async (latitude, longitude) => {
     try {
-      // Ensure latitude and longitude are converted to strings if needed
-      await updateUserAttribute(user.userId, 'latitude', String(latitude));
-      await updateUserAttribute(user.userId, 'longitude', String(longitude));
-      if (cityOrPostcode) {
-        await updateUserAttribute(user.userId, 'cityOrPostcode', cityOrPostcode);
-        updateResponse('cityOrPostcode', cityOrPostcode); // Update context
-      }
+      const reverseGeocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+      const city = reverseGeocode[0]?.city || 'Unknown';
+
+      // Store city in the user attributes
+      await updateUserAttribute(user.userId, 'city', city);
+      updateResponse('city', city); // Update context with the city name
+
     } catch (error) {
       Alert.alert('Error', error.message);
     }
@@ -105,7 +109,7 @@ const Localization = () => {
 
     try {
       await saveLocation(location.coords.latitude, location.coords.longitude);
-      router.replace('/allowNotification');
+      router.replace('/genderCollaborator');
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
@@ -114,23 +118,26 @@ const Localization = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <ScrollView
-        contentContainerStyle={{
-          paddingHorizontal: 20,
-          paddingTop: 20,
-          flexGrow: 1, // Ensures ScrollView expands to fill available space
-        }}
-      >
-        <View className="flex-1 justify-center px-4">
-          <Text className="text-2xl font-semibold text-black mb-4">
-            Can we get your location?
-          </Text>
-          <Text className="text-lg text-gray-700 mb-6">
-            We need it so we can show you all the great people nearby (or far away).
+    <SafeAreaView className="bg-secondary h-full">
+
+      <View className="items-center justify-center">
+        <Image source={images.Wlogo}
+          resizeMode='contain'  className="my-0 w-[150px] h-[100px]"/>
+      </View>
+
+      <View className="flexGrow-1">
+        <ScrollView className="h-full bg-white rounded-[35px]">
+          <Image source={stepsBar.Step3}
+            resizeMode='contain' className="w-[365px] h-[50px] mt-7 mb-2 self-center"/>
+
+          <View>
+            <Text className="text-2xl text-secondary text-semibold font-pmedium mx-3.5  mt-2 px-3">Can we get your location?</Text>
+          </View>
+          <Text className="text-sm mb-6 mx-3.5  mt-2 justify-center px-3">
+              We need it so we can show you all the great people nearby (or far away).
           </Text>
 
-          <View className="flex-row gap-2 mb-3">
+          <View className="flex-row gap-2 mt-3.5 px-3">
             <TextInput
               placeholder='Search'
               value={search}
@@ -145,59 +152,63 @@ const Localization = () => {
             />
           </View>
 
-          <View className="flex-row justify-around mb-7">
-            <TouchableOpacity
-              onPress={getCurrentLocation}
-              className="border border-gray-300 p-3 rounded-full flex-1 mr-2 bg-gray-200"
+          <View className="flex-row  mt-3 px-3">
+            <TouchableOpacity 
+              onPress={() => {
+                handleSearch();
+                setIsSearchPressed(true);
+                setTimeout(() => {
+                  setIsSearchPressed(false);
+                }, 200); // reset the state after 200ms
+              }}
+              className={`border-2 border-secondary-200 p-3 rounded-full flex-1 mt-2.5 ${isSearchPressed ? 'bg-secondary-200' : 'bg-white'}`}
             >
-              <Text className="text-center text-black">Get my current Location</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleSearch}
-              className="border border-gray-300 p-3 rounded-full flex-1 ml-2 bg-gray-200"
-            >
-              <Text className="text-center text-black">Search Location</Text>
+              <Text className={`text-center ${isSearchPressed ? 'text-white' : 'text-black'}`}>Search Location</Text>
             </TouchableOpacity>
           </View>
-
-          
+            
           {errorMsg && (
-            <Text className="text-red-500 text-center mb-4">{`Error: ${errorMsg}`}</Text>
+            <Text className="text-red-500 text-center mb-4 mt-3">{`${errorMsg}`}</Text>
           )}
 
           {location ? (
-            <MapView
-              style={{ width: '100%', height: 300, marginBottom: 20 }}
-              region={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            >
-              <Marker
-                coordinate={{
+            <View className="rounded-full overflow-hidden mt-3.5 px-3">
+              <MapView 
+                className="w-full h-[200px]"
+                region={{
                   latitude: location.coords.latitude,
                   longitude: location.coords.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
                 }}
-                title="Your Location"
-              />
-            </MapView>
+              >
+                <Marker
+                  coordinate={{
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                  }}
+                  title="Your Location"
+                />
+              </MapView>
+            </View>
           ) : (
-            <Text className="text-center">Getting Location...</Text>
+            <View className="w-full h-[200px]  rounded-full overflow-hidden mt-3.5 px-3 justify-center items-center">
+              <Text className="text-center text-secondary-200">Getting Your Current Location...</Text>
+            </View>
           )}
-
-        </View>
-      </ScrollView>
-
-      <View className="px-4 py-2">
-        <IconButton
-          handlePress={handlePress}
-          containerStyles="bg-black"
-          iconStyles="text-white"
-          isLoading={isSubmitting}
-        />
+     
+          <View className="w-full justify-center min-h-[14vh] px-3 flex-1 sticky">
+            <CustomButton 
+              title="Next"
+              handlePress={handlePress}
+              containerStyles="bg-secondary-200"
+              textStyles="text-center text-white"
+              isLoading={isSubmitting}
+            />
+          </View>
+        </ScrollView>
       </View>
+
     </SafeAreaView>
   );
 };

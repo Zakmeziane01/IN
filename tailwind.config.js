@@ -23,11 +23,11 @@ module.exports = {
     },
 
     colors: {
-        primary: "#FFFFF",
+        primary: "#FFFFFF",
         secondary: {
-          DEFAULT: "#FF9C01",
-          100: "#FF9001",
-          200: "#FF8E01",
+          DEFAULT: "#5bb450",
+          100: "#5bb450",
+          200: "#5bb450",
         },
         black: {
           DEFAULT: "#000",

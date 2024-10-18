@@ -6,8 +6,8 @@ import { images } from "../../constants";
 import {createUser, logOut, getCurrentUser} from "../../lib/appwrite"
 import FormField from '../../components/FormField';
 import CustomButton from "../../components/CustomButton";
-import { useGlobalContext } from "../../context/GlobalProvider";  // we use global context state when our user has logged in and automatically redirect them to the homapage  
-
+import { useGlobalContext } from "../../context/GlobalProvider"; 
+import { StatusBar } from 'expo-status-bar';
 
 
 const SignUp = () => {
@@ -32,16 +32,13 @@ const SignUp = () => {
     
     setIsSubmitting(true);
     try {
-      
-
-
       // Call createUser function with form data
       const result = await createUser(form.email, form.password, form.username)
       
       setUser(result.targets[0])
       setIsLogged(true);
 
-      router.replace("/welcomeScreen")
+      router.replace("/home")
       
     } catch (error) {
       Alert.alert("Error",error.message)
@@ -50,77 +47,59 @@ const SignUp = () => {
     }
   };
 
-   
-
   return (
-    <SafeAreaView className="bg-white h-full">
-     <ScrollView
-        contentContainerStyle={{
-          height: "100%",
-          alignItems: 'center',
-          paddingHorizontal: 16,
-       }}
-       >
+    <SafeAreaView className="bg-secondary h-full">
+      <View className="items-center justify-center">
+        <Image source={images.Wlogo}
+          resizeMode='contain' className="my-0 w-[235px] h-[160px]"/>
+      </View>
+
+      <View className="flexGrow-1">
+      <ScrollView className="h-full bg-white rounded-t-[35px]">
+      <View className = " w-full justify-center min-h-[65vh] px-4 my-6 flex-1">
+        <View className="flex items-center flex-row">
+          <Text className="text-3xl text-secondary text-semibold font-psemibold ml-3"> Sign Up </Text>
+          {/* <Image source={images.logo}
+              resizeMode='contain' className=" w-[160px] h-[90px] ml-2 flex-shrink"/> */}
+        </View>
+        <FormField
+        placeholder="Username"
+        value={form.username}
+        handleChangeText={(e) => setForm({...form, username:e})}
+        otherStyles='mt-2'
+        />
+        <FormField 
+        placeholder="Email"
+        value={form.email}
+        handleChangeText={(e) => setForm({...form, email:e})}
+        otherStyles='margin-top-2'
+        keyboardType='email-address'
+        />
+        <FormField
+        placeholder="Password"
+        value={form.password}
+        handleChangeText={(e) => setForm({...form, password:e})}
+        />
+
+        <CustomButton className=" px-4 my-6"
+        title = "Sign up"
+        handlePress={submit}
+        containerStyles="mt-10 bg-secondary mx-3"
+        textStyles="text-white"
+        isLoading={isSubmitting}
         
-      <View
-          className="w-full flex justify-center h-full px-4 my-6"
-          style={{
-            
-          }}
-        >
-          <Image
-            source={images.logo}
-            resizeMode="contain"
-            className="w-[115px] h-[34px]"
-          />
-
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Create account
+        />
+        <View className="justify-center pt-5 flex-row gap-2">
+          <Text className="text-lg text-gray-100 font-pregular">
+            Have an account already?
           </Text>
+          <Link href="/sign-in" className='text-lg font-psemibold text-secondary'>Log in</Link>
+        </View>
+        </View>
 
-          <FormField
-            title="Username"
-            value={form.username}
-            handleChangeText={(e) => setForm({ ...form, username: e })}
-            otherStyles="mt-10"
-          />
-
-          <FormField
-            title="Email"
-            value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles="mt-7"
-            keyboardType="email-address"
-          />
-
-          <FormField
-            title="Password"
-            value={form.password}
-            handleChangeText={(e) => setForm({ ...form, password: e })}
-            otherStyles="mt-7"
-          />
-
-          <CustomButton
-            title="Sign Up"
-            handlePress={submit}
-            containerStyles="mt-7"
-            isLoading={isSubmitting}
-          />
-
-            <View className="flex justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-gray-100 font-pregular">
-              Have an account already?
-            </Text>
-            <Link
-              href="/sign-in"
-              className="text-lg font-psemibold text-secondary"
-            >
-              Sign in
-            </Link>
-          </View>
-
-          </View>
       </ScrollView>
+      </View>
+      <StatusBar backgroundColor='#5bb450' style='light'/> 
     </SafeAreaView>
   )
 }

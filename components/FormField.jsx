@@ -1,45 +1,38 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-import React, { useState } from 'react';
-import { icons } from '../constants';
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native'
+import React, { useState } from 'react'
+import {icons} from '../constants'
 
-const FormField = ({
-  title,
-  value,
-  placeholder,
-  handleChangeText,
-  otherStyles,
-  containerStyles,
-  mode = 'text',
-  multiline = false, // Add a multiline prop
-  numberOfLines = 1, // Allow setting the initial number of lines
-  ...props
-}) => {
-  const [showPassword, setShowPassword] = useState(false);
-
+const FormField = ({title, value, placeholder, handleChangeText, otherStyles,otherStyles2,containerStyles,multiline = false, numberOfLines = 1,...props}) => {
+    const [showPassword, setshowPassword] = useState(false)
   return (
-    <View className={`space-y-2 ${otherStyles}`}>
-      <Text className="text-base text-gray-60 font-pmedium">{title}</Text>
-      <View className={`w-full px-4 bg-white rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row text-center ${containerStyles}`}>
+    <View className ={`space-y-2 mx-3  ${otherStyles}`}>
+   <Text className={`text-base text-secondary font-light  ${otherStyles2}`}>{title}</Text>
+
+
+      <View className={`border-2 border-gray-200 w-full p-5 h-16 ${containerStyles} px-2 
+      bg-primary rounded-xl focus:border-secondary items-center flex-row ${containerStyles}`}>
+
+
         <TextInput
-          className="flex-1 text-black font-psemibold text-base py-2" // Added padding to ensure better vertical alignment
-          value={value}
-          placeholder={placeholder}
-          placeholderTextColor="#7B7B8B"
-          onChangeText={handleChangeText}
-          secureTextEntry={title === 'Password' && !showPassword}
-          multiline={multiline} // Enable multiline
-          numberOfLines={numberOfLines} // Set the initial number of lines
-          textAlignVertical={multiline ? "top" : "center"} // Align text at the top if multiline
-          {...props}
+            className="flex-1 text-[#7b7b8b] font-pregular text-base"
+            value={value}
+            placeholder={placeholder}
+            placeholderTextColor="#7b7b8b"
+            onChangeText={handleChangeText}
+            secureTextEntry={placeholder==='Password'&& !showPassword}
+            multiline={multiline}
+            numberOfLines={numberOfLines}
+            
+
         />
-        {title === 'Password' && (
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Image source={!showPassword ? icons.eye : icons.eyeHide} className="w-6 h-6" resizeMode="contain" />
-          </TouchableOpacity>
+        {placeholder==='Password'&&(
+            <TouchableOpacity onPress={() =>setshowPassword(!showPassword)}>
+                <Image source={!showPassword ? icons.eye : icons.eyeHide} className="w-3 h-4 mr-3 " resizeMode='contain'/>
+            </TouchableOpacity>
         )}
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default FormField;
+export default FormField

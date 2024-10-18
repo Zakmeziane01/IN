@@ -1,5 +1,5 @@
+// manages authentication and user state, which is what you'll be using to verify if a user is logged in and get their details
 import React, { createContext, useContext, useEffect, useState } from "react";
-
 import { getCurrentUser } from "../lib/appwrite";
 
 const GlobalContext = createContext();

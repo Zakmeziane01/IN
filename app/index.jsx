@@ -1,7 +1,7 @@
 //HOME PAGE 
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Image, ScrollView } from 'react-native';  //SafeAreaView automatically calculates the safe area insets and applies padding to your content so that it is displayed correctly on all devices. Without SafeAreaView: Content might be hidden behind the notch or overlap with the home indicator. This can lead to a poor user experience as users might miss important information or find it difficult to interact with UI elements.
+import { View, Text, Image, ScrollView } from 'react-native'; 
 import { Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../constants";
@@ -14,7 +14,7 @@ export default function  App() {
   
   const { loading, isLogged } = useGlobalContext();
 
-  if (!loading && isLogged) return <Redirect href="/home" />;
+  if (!loading && isLogged) return <Redirect href="/uploadPhoto" />;
 
 
   return (
@@ -38,30 +38,27 @@ export default function  App() {
               className="w-[260px] h-[84px]"
               resizeMode="contain"
             />
-            <Text className="text-1xl text-secondar-200 font-bold text-center">
-             Create Connect, Conquere
-             </Text>
+            <Text className="text-1xl text-secondary-200 font-bold text-center">
+             Connect, Create, Conquere
+            </Text>
           </View>
-
-
-
                       
-          <Text className="text-sm font-pregular text-gray-100 text-center mb-4 absolute bottom-0 w-full ">
-            Where Creativity Meets Innovation: Embark on a Journey of Limitless
-            Exploration with Aora
-           </Text>
+          <Text className="text-lg font-pregular text-secondary-200 text-center mb-4 absolute bottom-0 w-full ">
+           Imagine working with someone who truly gets your vision.
+          </Text>
 
       </View>
 
      </ScrollView>
 
-
+           <View className="w-full justify-center px-3 flex-1 mt-2">
            <CustomButton
-             title="Create account"      // This sets the button's label to "Continue with Email".
-             handlePress={() => router.push("/sign-in")}          //This is an empty function that will handle the button press event.
-             containerStyles="w-full  mt-7 font-psemibold"
+             title="Ready to start"                                                  // This sets the button's label to "Continue with Email".
+             handlePress={() => router.push("/sign-in")}                             //This is an empty function that will handle the button press event.
+             containerStyles="w-full mt-7 font-psemibold bg-secondary-200"
+             textStyles="text-white"
             /> 
-      
+          </View>
  
            <StatusBar backgroundColor="#161622" style="light" />
     

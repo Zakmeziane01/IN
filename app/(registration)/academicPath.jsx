@@ -1,9 +1,10 @@
-import { View, Text, ScrollView, Alert } from 'react-native';
+import { View, Text, ScrollView, Alert,Image } from 'react-native';
+import { images, stepsBar } from "../../constants";
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from "expo-router";
 import FormField from '../../components/FormField';
-import IconButton from '../../components/IconButton'; 
+import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { updateUserAttribute } from '../../lib/appwrite';  // Updated import
 import { useUserContext } from '../../context/UserContext'; 
@@ -35,7 +36,7 @@ const AcademicPath = () => {
       updateResponse('university', form.university);
 
 
-      router.push("/projectType");
+      router.push("/careerPath");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -44,41 +45,54 @@ const AcademicPath = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">
-      <ScrollView
-        contentContainerStyle={{
-          height: "100%",
-          marginHorizontal: 20,
-          paddingTop: 120,
-          paddingBottom: 20
-        }}
-      >
-        <View className="w-full flex items-center flex-1 h-full px-4 my-6">
-          <Text className="text-2xl font-semibold text-white mt-10">
-            Where do you study?
-          </Text>
+    <SafeAreaView className="bg-secondary h-full">
 
-          <FormField
-            title="Add a college or university"
-            value={form.university}
-            handleChangeText={(e) => setForm({ ...form, university: e })}
-            otherStyles="mt-10"
-          />
+    <View className="items-center justify-center">
+      <Image source={images.Wlogo}
+        resizeMode='contain'  className="my-0 w-[150px] h-[100px]"/>
+    </View>
 
-          <FormField
-            title="Course"
-            value={form.course}
-            handleChangeText={(e) => setForm({ ...form, course: e })}
-            otherStyles="mt-9"
-          />
-        </View>
-      </ScrollView>
-        <IconButton
+    <View className="flexGrow-1">
+      <ScrollView className="h-full bg-white rounded-[35px]">
+        <Image source={stepsBar.Step7}
+        resizeMode='contain' className="w-[365px] h-[50px] mt-7 mb-2 self-center"/>
+
+    <View>
+    <Text className="text-2xl text-secondary text-semibold font-pmedium ml-3.5  mt-2 ">Where do you study?</Text>
+    </View>
+
+    <View className = " w-full justify-center min-h-[25vh] px-3 flex-1 mt-2">   
+      <FormField
+          title="Add a college or university"
+          value={form.university}
+          handleChangeText={(e) => setForm({ ...form, university: e })}
+          otherStyles="mt-10"
+        />
+
+
+      <FormField
+          title="Course"
+          value={form.course}
+          handleChangeText={(e) => setForm({ ...form, course: e })}
+          otherStyles="mt-9"
+        />
+ 
+    </View>
+
+    <View className="w-full justify-center min-h-[37vh] px-3 flex-1 mt-2">
+      <CustomButton 
+          title="Next"
           handlePress={handlePress}
-          containerStyles=""
-          iconStyles="text-white"
+          containerStyles="bg-secondary-200"
+          textStyles="text-center text-white"
           isLoading={isSubmitting}
         />
+        </View>
+    
+      </ScrollView>   
+      </View>
+
+     
 
     </SafeAreaView>
   );

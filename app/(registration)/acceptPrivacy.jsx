@@ -1,14 +1,13 @@
 import React from 'react';
-import { View, Text, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView,Image } from 'react-native';
+import { images } from "../../constants";
 import CustomButton from '../../components/CustomButton'; 
 import {router} from "expo-router";
-
-
 
 const PrivacyPage = () => {
   const handleAcceptPress = () => {
     console.log("Accept button pressed");
-    router.push("/home")
+    router.push("/allDone")
   };
 
   const handlePersonalizePress = () => {
@@ -18,47 +17,68 @@ const PrivacyPage = () => {
 
   return (
     <SafeAreaView className="bg-white h-full">
-      <ScrollView
-        contentContainerStyle={{
-          height: "100%",
-          marginHorizontal: 20,
-          paddingTop: 120,
-          paddingBottom: 20
-        }}
-      >
-        <Text className="text-black text-3xl font-bold mb-7">
-          Your privacy comes first
-        </Text>
-        <Text className="text-balkck mb-3">
-          Add a little bit of body text. Add a little bit of body text. Add a
-          little bit of body text. Add a little bit of body text. Add a little
-          bit of body text.
-        </Text>
-        <Text className="text-black">
-          Add a little bit of body text. Add a little bit of body text. Add a
-          little bit of body text. Add a little bit of body text. Add a little
-          bit of body text.
+      <ScrollView>
+      <View className="w-full justify-center px-3.5 flex-1 mt-20">
+      <View className="ml-80">
+        <View className="rounded-full border-2 border-secondary-200 p-2 mr-11">
+          <Image 
+            source={images.privacyPolicy}
+            resizeMode='contain' 
+            className="h-[35px] w-[35px]" 
+          />
+        </View>
+      </View>
+        
+        <Text className="text-secondary-200 text-3xl font-bold mt-10 text-center">
+          Privacy Policy
         </Text>
 
+
+
+        <View className="p-10 text-center">
+        <Text>
+          Add a little bit of body text. Add a little bit of body text. Add a
+          little bit of body text. Add a little bit of body text. Add a little
+          bit of body text.
+        </Text>
+        <Text>
+          Add a little bit of body text. Add a little bit of body text. Add a
+          little bit of body text. Add a little bit of body text. Add a little
+          bit of body text.
+          Add a little bit of body text. Add a little bit of body text. Add a
+          little bit of body text. Add a little bit of body text. Add a little
+          bit of body text.
+          Add a little bit of body text. Add a little bit of body text. Add a
+          little bit of body text. Add a little bit of body text. Add a little
+          bit of body text.
+          Add a little bit of body text. Add a little bit of body text. Add a
+          little bit of body text. Add a little bit of body text. Add a little
+          bit of body text.
+        </Text>
+        </View>
+
+        </View>
     
         </ScrollView>
-
+        <View className="w-full justify-center px-3.5 flex-1">
         <CustomButton
           title="Start"
           handlePress={handleAcceptPress}
-          containerStyles="bg-black mb-4"
-          textStyles="text-white text-lg"
+          containerStyles="bg-secondary-200"
+          textStyles="text-center text-white"
           isLoading={false}
         />
-
-
         <CustomButton
-          title="Personalize"
+          title="Personalize my choices"
           handlePress={handlePersonalizePress}
           containerStyles="bg-white"
-          textStyles="text-black"
+          textStyles="text-secondary-200"
           isLoading={false}
         />
+        
+        </View>
+
+                
     </SafeAreaView>
   );
 };

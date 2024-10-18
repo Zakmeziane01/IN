@@ -13,6 +13,20 @@ import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
 import setting from "../assets/icons/setting.png";
 import dots from  "../assets/icons/dots.png";
+import attention from  "../assets/icons/attention.png";
+import pluss from "../assets/icons/pluss.png";
+import cross from "../assets/icons/cross.png";
+import link from "../assets/icons/link.png";
+import Birthday from "../assets/icons/Birthday.png";
+import locationFeed from "../assets/icons/locationFeed.png";
+import languageFeed from "../assets/icons/languageFeed.png";
+import work from "../assets/icons/work.png";
+import university from "../assets/icons/university.png";
+import relationship from "../assets/icons/relationship.png";
+
+
+
+
 
 
 
@@ -31,6 +45,16 @@ export default {
   eyeHide,
   eye,
   setting,
-  dots
+  dots,
+  attention,
+  pluss,
+  cross,
+  link,
+  Birthday,
+  locationFeed,
+  languageFeed,
+  work,
+  university,
+  relationship,
 
 };

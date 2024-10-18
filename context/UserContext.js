@@ -1,4 +1,4 @@
-// UserContext.js
+// UserContext.js     used for storing user-specific responses. It allows you to update and retrieve response data based on a key-value pair
 import React, { createContext, useState, useContext } from 'react';
 
 const UserContext = createContext();

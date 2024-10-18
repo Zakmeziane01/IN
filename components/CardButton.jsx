@@ -16,10 +16,10 @@ const CardButton = ({ cards, handleCardPress }) => {
             key={index}
             onPress={() => handleCardPress(card)}
             className={`w-[48%] h-55 p-2 rounded-lg border-2 mb-3 ${
-              card.selected ? 'border-green-600 bg-green-100' : 'border-gray-300'
+              card.selected ? 'border-secondary-200 bg-green-100' : 'border-gray-300'
             }`}
           >
-            <Text className={`text-center text-sm font-semibold ${card.selected ? 'text-green-600' : 'text-gray-800'}`}>
+            <Text className={`text-center text-sm font-semibold ${card.selected ? 'text-secondary-200' : 'text-gray-800'}`}>
               {card.title}
             </Text>
             <Text className="text-center text-sm text-gray-600 mt-2">{card.description}</Text>
@@ -34,10 +34,10 @@ const CardButton = ({ cards, handleCardPress }) => {
             key={index}
             onPress={() => handleCardPress(card)}
             className={`w-[48%] h-55 p-2 rounded-lg border-2 mb-2 ${
-              card.selected ? 'border-green-600 bg-green-100' : 'border-gray-300'
+              card.selected ? 'border-secondary-200 bg-green-100' : 'border-gray-300'
             }`}
           >
-            <Text className={`text-center text- font-semibold ${card.selected ? 'text-green-600' : 'text-gray-800'}`}>
+            <Text className={`text-center text- font-semibold ${card.selected ? 'text-secondary-200' : 'text-gray-800'}`}>
               {card.title}
             </Text>
             <Text className="text-center text-sm text-gray-600 mt-2">{card.description}</Text>

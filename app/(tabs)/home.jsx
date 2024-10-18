@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, Dimensions, TouchableOpacity, Platform } from "react-native";
+import { View, Text, Dimensions, TouchableOpacity, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Carousel from "react-native-snap-carousel";
 import DatesCard from "../../components/DatesCard";
+import DatesCardGroup from "../../components/DatesCardGroup";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getAllUsers, addMatch, createChatRoom, checkMatchExists, getChatRoomId } from "../../lib/appwrite";
@@ -16,7 +17,7 @@ const Home = () => {
   const [users, setUsers] = useState([]);
   const [websocket, setWebSocket] = useState(null);
   const carouselRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);      //Keeps track of the current item in the carousel.
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -30,8 +31,8 @@ const Home = () => {
 
     fetchUsers();
 
-    const ws = new WebSocket('ws://localhost:8080');
-
+    const ws = new WebSocket('ws://localhost:8080');    //Sets up a WebSocket connection to 'ws://localhost:8080'.   common in development environments where you're testing both the client and server on the same machine.   common in development environments where you're testing both the client and server on the same machine.
+  
     ws.onopen = () => {
       console.log('WebSocket connected');
       setWebSocket(ws);
@@ -72,7 +73,7 @@ const Home = () => {
         }
 
         if (chatRoomId) {
-          console.log("Chat room ID:", chatRoomId);
+
           router.push(`/chatDetailsScreen?chatRoomId=${chatRoomId}`);
           // Notify other clients about the new chat room
           if (websocket) {
@@ -89,7 +90,7 @@ const Home = () => {
     }
   };
 
-  const handleRefusePress = () => {
+  const handleRefusePress = () => {                        //Moves the carousel to the next item.
     if (carouselRef.current) {
       const nextIndex = (currentIndex + 1) % users.length;
       carouselRef.current.snapToItem(nextIndex);
@@ -97,40 +98,51 @@ const Home = () => {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <DatesCard item={item} handleClick={(clickedItem) => console.log('Card clicked:', clickedItem)} />
+  const renderItem = ({ item }) => (                    //Renders each item in the carousel using the DatesCard component.
+    <DatesCard item={item} handleClick={(clickedItem) => console.log('Card clicked')} />  
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white", paddingTop: android ? hp(2) : 0 }}>
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <Carousel
-          ref={carouselRef}
-          data={users}
-          renderItem={renderItem}
-          sliderWidth={width}
-          itemWidth={width * 0.95}
-          inactiveSlideScale={0.9}
-          inactiveSlideOpacity={0.3}
-          onSnapToItem={(index) => setCurrentIndex(index)}
-        />
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 14 }}>
-        <TouchableOpacity
-          style={{ backgroundColor: "blue", borderRadius: 8, padding: 10, marginRight: 14 }}
-          onPress={handleMessagePress}
-        >
-          <Text style={{ color: "white", fontSize: 18 }}>Send</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ backgroundColor: "red", borderRadius: 8, padding: 10 }}
-          onPress={handleRefusePress}
-        >
-          <Text style={{ color: "white", fontSize: 18 }}>Next</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-};
+    <SafeAreaView className={`flex-1 bg-white ${android ? 'pt-2' : 'pt-0'}`}>
+
+        <ScrollView className="bg-white h-full">   
+          <View className="mt-10">
+            <DatesCardGroup>   
+            </DatesCardGroup>  
+          </View> 
+
+          <View className="flex-1 justify-center">
+              <Carousel
+                ref={carouselRef}
+                data={users}
+                renderItem={renderItem}
+                sliderWidth={width}
+                itemWidth={width * 0.95}
+                inactiveSlideScale={0.9}
+                inactiveSlideOpacity={0.3}
+                onSnapToItem={(index) => setCurrentIndex(index)}
+              />
+            </View>
+        </ScrollView>
+
+
+            <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 14 }}>
+              <TouchableOpacity
+                style={{ backgroundColor: "blue", borderRadius: 8, padding: 10, marginRight: 14 }}
+                onPress={handleMessagePress}
+              >
+                <Text style={{ color: "white", fontSize: 18 }}>Send</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ backgroundColor: "red", borderRadius: 8, padding: 10 }}
+                onPress={handleRefusePress}
+              >
+                <Text style={{ color: "white", fontSize: 18 }}>Next</Text>
+              </TouchableOpacity>
+            </View>
+
+      </SafeAreaView>
+        );
+      };
 
 export default Home;

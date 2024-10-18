@@ -1,57 +1,35 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, TouchableOpacity, Alert, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
+import { Video } from 'expo-av';
 
-const UploadButton = ({
-  onFilePicked,
-  pickerType = 'document', 
-  buttonText = 'Pick a file',
-  buttonClassName,
-  textClassName,
-  containerClassName,
-  squareSize = 200,
-}) => {
-  const [file, setFile] = useState(null);
-  const [image, setImage] = useState(null);
+const UploadButton = ({ onFilePicked, pickerType, containerClassName, squareSize = 90, isUploaded = false, plusIcon }) => {
+  
+  const [mediaUri, setMediaUri] = useState(null); // Updated to handle both images and videos
 
   const requestPermission = async () => {
-    if (pickerType === 'image') {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Sorry, we need camera roll permissions to make this work!');
-        return false;
-      }
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Sorry, we need camera roll permissions to make this work!');
+      return false;
     }
     return true;
   };
 
   const pickFile = async () => {
     const hasPermission = await requestPermission();
-    if (!hasPermission && pickerType === 'image') return;
+    if (!hasPermission) return;
 
     let result;
-    if (pickerType === 'image') {
+    if (pickerType === 'media') {
       result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ImagePicker.MediaTypeOptions.All, // Allow both images and videos
         allowsEditing: true,
-        aspect: [4, 3],
         quality: 1,
       });
 
-      if (!result.cancelled) {
-        setImage(result.assets[0].uri);
-        if (onFilePicked) {
-          onFilePicked(result.assets[0].uri);
-        }
-      }
-    } else if (pickerType === 'document') {
-      result = await DocumentPicker.getDocumentAsync({
-        type: '*/*',
-      });
-
-      if (result.type !== 'cancel') {
-        setFile(result.uri);
+      if (!result.canceled) {
+        setMediaUri(result.assets[0].uri);
         if (onFilePicked) {
           onFilePicked(result.assets[0].uri);
         }
@@ -61,23 +39,32 @@ const UploadButton = ({
 
   return (
     <View className={containerClassName}>
-      <TouchableOpacity 
-        onPress={pickFile} 
-        className={`w-[${squareSize}px] h-[${squareSize}px] rounded-lg border-2 border-gray-400 flex items-center justify-center ${buttonClassName}`}
+      <TouchableOpacity
+        onPress={pickFile}
+        className={`w-[${squareSize}px] h-[${squareSize}px] rounded-lg border-2 flex items-center justify-center border-gray-300`}
       >
-        <View className="flex items-center justify-center">
-          {image ? (
-            <Image 
-              source={{ uri: image }} 
-              style={{ width: squareSize, height: squareSize, resizeMode: 'cover', borderRadius: 10 }} 
+        <View className="flex items-center justify-center" style={{ width: squareSize, height: squareSize }}>
+          {mediaUri ? (
+            // Check if the picked file is a video
+            mediaUri.endsWith('.mp4') || mediaUri.endsWith('.mov') ? (
+            <Video
+              source={{ uri: mediaUri }}
+              shouldPlay={false} // Set to false if you want to allow the user to control playback
+              style={{ width: squareSize, height: squareSize, borderRadius: 10 }}
+              isLooping={false}
+              useNativeControls // Allows user to control playback
             />
-          ) : file ? (
-            <Text className="text-sm text-black text-center">{file.split('/').pop()}</Text>
+            ) : (
+              <Image
+                source={{ uri: mediaUri }}
+                style={{ width: squareSize, height: squareSize, resizeMode: 'cover', borderRadius: 10 }}
+              />
+            )
           ) : (
-            <>
-              <Text className="text-2xl text-gray-400">+</Text>
-              <Text className={textClassName}>{buttonText}</Text>
-            </>
+            <Image
+              source={plusIcon}
+              style={{ width: squareSize * 0.3, height: squareSize * 0.3, resizeMode: 'contain' }} // Smaller size for the icon
+            />
           )}
         </View>
       </TouchableOpacity>

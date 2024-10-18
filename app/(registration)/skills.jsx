@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Alert, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, Alert, SafeAreaView,Image } from 'react-native';
+import { images, stepsBar } from "../../constants";
 import { router } from "expo-router";
 import FormField from '../../components/FormField';
-import IconButton from '../../components/IconButton'; 
+import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { useUserContext } from "../../context/UserContext"; // Import useUserContext
 import { updateUserAttribute } from '../../lib/appwrite';
@@ -37,7 +38,7 @@ const Skills = () => {
             updateResponse('languageSpoken', form.languageSpoken);
 
             // Navigate to the next screen
-            router.push("/uploadPhotos");
+            router.push("/nextStage");
 
         } catch (error) {
             Alert.alert("Error", error.message);
@@ -47,53 +48,69 @@ const Skills = () => {
     };
 
     return (
-        <SafeAreaView className="bg-white h-full">
-            <ScrollView
-                contentContainerStyle={{
-                    height: "30%",
-                    marginHorizontal: 20,
-                    paddingTop: 20,
-                    marginBottom: 100
-                }}
-            >
-                <View className="w-full px-4 my-6">
-                    <Text className="text-2xl font-semibold text-black mt-10 font-psemibold">
-                        Which skills best define you?
-                    </Text>
+        <SafeAreaView className="bg-secondary h-full">
+    
+        <View className="items-center justify-center">
+          <Image source={images.Wlogo}
+            resizeMode='contain'  className="my-0 w-[150px] h-[100px]"/>
+        </View>
+    
+        <View className="flexGrow-1">
+          <ScrollView className="h-full bg-white rounded-[35px]">
+            <Image source={stepsBar.Step11}
+            resizeMode='contain' className="w-[365px] h-[50px] mt-7 mb-2 self-center"/>
+    
+        <View>
+        <Text className="text-2xl text-secondary text-semibold font-pmedium ml-3  mt-2 ">Which skills best define you?</Text>
+        </View>
+    
+        <View className = " w-full justify-center min-h-[25vh] px-3 flex-1 mt-2">   
+        <FormField
+            title="General Skills"
+            value={form.generalSkills}
+            handleChangeText={(e) => setForm({ ...form, generalSkills: e })}
+            otherStyles="mt-3"
+        />
 
-                    <FormField
-                        title="General Skills"
-                        value={form.generalSkills}
-                        handleChangeText={(e) => setForm({ ...form, generalSkills: e })}
-                        otherStyles="mt-3"
-                    />
 
-                    <FormField
-                        title="About You"
-                        value={form.aboutYou}
-                        handleChangeText={(e) => setForm({ ...form, aboutYou: e })}
-                        otherStyles="mt-3"
-                        containerStyles="h-60"
-                        multiline={true}
-                        numberOfLines={20}
-                    />
+        <FormField
+            title="About You"
+            value={form.aboutYou}
+            handleChangeText={(e) => setForm({ ...form, aboutYou: e })}
+            otherStyles="mt-3"
+            containerStyles="h-40 items-start"
+            multiline={true}
+            numberOfLines={20}
+        />
 
-                    <FormField
-                        title="Language Spoken"
-                        value={form.languageSpoken}
-                        handleChangeText={(e) => setForm({ ...form, languageSpoken: e })}
-                        otherStyles="mt-3"
-                    />
-                </View>
-            </ScrollView>
 
-            <IconButton
-                handlePress={handlePress}
-                containerStyles="mt-7"
-                isLoading={isSubmitting}
+        <FormField
+            title="Language Spoken"
+            value={form.languageSpoken}
+            handleChangeText={(e) => setForm({ ...form, languageSpoken: e })}
+            otherStyles="mt-3"
+        />
+     
+        </View>
+    
+        <View className="w-full justify-center min-h-[vh] px-3 flex-1">
+          <CustomButton 
+              title="Next"
+              handlePress={handlePress}
+              containerStyles="bg-secondary-200"
+              textStyles="text-center text-white"
+              isLoading={isSubmitting}
             />
+            </View>
+        
+          </ScrollView>   
+          </View>
+    
+         
+    
         </SafeAreaView>
-    );
-};
+      );
+    };
+    
 
 export default Skills;

@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 const AllDone = () => {
   const handleAcceptPress = () => {
     console.log("Accept button pressed");
-    router.push("/acceptPrivacy");
+    router.push("/home");
   };
 
   const handlePersonalizePress = () => {
@@ -24,23 +24,22 @@ const AllDone = () => {
           paddingBottom: 20
         }}
       >
-        <Text className="text-black text-3xl font-bold mb-4">
+        <Text className="text-secondary-200 text-3xl font-bold mb-4">
           All Done!
         </Text>
-        <Text className="text-green-500 mb-4">
+        <Text className="text-black mb-4">
           Ready to succeed with the perfect collaborator
         </Text>
-
-        {/* You can add more content here if needed */}
       </ScrollView>
-
-      <CustomButton
+      <View className="w-full justify-center  px-3 flex-1 mb-20">
+      <CustomButton className="w-full justify-center  px-3 flex-1"
         title="Start"
         handlePress={handleAcceptPress}
-        containerStyles="bg-black mb-4"
-        textStyles="text-white text-lg"
+        containerStyles="bg-secondary-200"
+        textStyles="text-center text-white"
         isLoading={false}
-      />
+      /></View>
+      
     </SafeAreaView>
   );
 };

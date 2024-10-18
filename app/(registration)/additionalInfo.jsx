@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Alert } from 'react-native';
+import { View, Text, ScrollView, Alert, Image} from 'react-native';
+import { images, stepsBar } from "../../constants";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from "expo-router";
 import FormField from '../../components/FormField';
-import IconButton from '../../components/IconButton'; 
+import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { updateUserAttribute } from '../../lib/appwrite';
 import PickerComponent from '../../components/PickerComponent';
 import { useUserContext } from '../../context/UserContext';
+
 
 // Helper function to generate options for pickers
 const generateOptions = (start, end) => {
@@ -60,49 +62,59 @@ const AdditionalInfo = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'center',
-          paddingHorizontal: 20,
-          paddingVertical: 20,
-        }}
-      >
-        <View className="w-full">
-          <Text className="text-2xl font-semibold text-black mb-6">What's your name</Text>
+    
+    <SafeAreaView className="bg-secondary h-full">
 
+    <View className="items-center justify-center">
+      <Image source={images.Wlogo}
+        resizeMode='contain'  className="my-0 w-[150px] h-[100px]"/>
+    </View>
+
+    <View className="flexGrow-1">
+      <ScrollView className="h-full bg-white rounded-[35px]">
+        <Image source={stepsBar.Step1}
+        resizeMode='contain' className="w-[365px] h-[50px] mt-7 mb-2 self-center"/>
+
+    <View className = " w-full justify-center min-h-[25vh] px-4 flex-1 mt-1 ">
+        
+          <Text className="text-2xl text-secondary text-semibold font-pmedium ml-3"> What's your name?</Text>
           <FormField
             value={firstName}
             handleChangeText={(text) => setFirstName(text)}
-            placeholder={"First Name (required)"}
+            placeholder={"First Name * "}
           />
 
           <FormField
             value={lastName}
             handleChangeText={(text) => setLastName(text)}
-            placeholder={"Last Name (required)"}
+            placeholder={"Last Name * "}
           />
+    </View>
 
-           <Text className="text-2xl font-semibold text-black mt-14 mb-3">What's yours age?</Text>
+    <View className="w-full justify-center self-center "  >
+           <Text className="text-2xl text-semibold font-pmedium text-secondary mt-10 mb-3 ml-3 ">What's yours age?</Text>
 
           <PickerComponent
             options={ageOptions}
             selectedValue={birthday}
             onValueChange={(value) => setBirthday(value)}
-      
-          />
-        </View>
-      </ScrollView>
-
-      <View className="px-6 pb-6">
-        <IconButton
+            />
+    </View>
+    <View className="mx-2 my-3">
+      <CustomButton 
+          title="Next"
           handlePress={handlePress}
-          containerStyles="bg-primary p-4 rounded-full"
-          iconStyles="text-white"
+          containerStyles="mt-20 bg-secondary-200"
+          textStyles="text-center text-white"
           isLoading={isSubmitting}
         />
+        </View>
+    
+      </ScrollView>   
       </View>
+
+     
+
     </SafeAreaView>
   );
 };

@@ -35,21 +35,7 @@ const RegistrationLayout = () => {
             headerShown: false,
           }}
         />
-
-        <Stack.Screen
-          name="allowNotification"
-          options={{
-            headerShown: false,
-          }}
-        />
-
-        <Stack.Screen
-          name="careerPath"
-          options={{
-            headerShown: false,
-          }}
-        />
-
+        
         <Stack.Screen
           name="genderCollaborator"
           options={{
@@ -77,6 +63,13 @@ const RegistrationLayout = () => {
             headerShown: false,
           }}
         /> 
+
+        <Stack.Screen
+          name="careerPath"
+          options={{
+            headerShown: false,
+          }}
+        />
            
         <Stack.Screen
           name="projectType"
@@ -100,7 +93,21 @@ const RegistrationLayout = () => {
         /> 
 
         <Stack.Screen
-          name="uploadPhotos"
+          name="nextStage"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+
+        <Stack.Screen
+          name="prompts"
+          options={{
+            headerShown: false,
+          }}
+        /> 
+        
+        <Stack.Screen
+          name="uploadPhoto"
           options={{
             headerShown: false,
           }}
@@ -114,6 +121,12 @@ const RegistrationLayout = () => {
           }}
         />
 
+        <Stack.Screen
+          name="allowNotification"
+          options={{
+            headerShown: false,
+          }}
+        />
 
         <Stack.Screen
           name="acceptPrivacy"

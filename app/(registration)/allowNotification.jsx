@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, Text, ScrollView } from 'react-native';
+import { Alert, View, Text, ScrollView,Image } from 'react-native';
+import { images } from "../../constants";
 import * as Notifications from 'expo-notifications';
 import CustomButton from '../../components/CustomButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -31,7 +32,7 @@ const NotificationScreen = () => {
         }
       }
       Alert.alert('Notification Permission', 'Notifications have been enabled!');
-      router.push("/careerPath"); 
+      router.push("/acceptPrivacy"); 
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
@@ -43,44 +44,40 @@ const NotificationScreen = () => {
     router.push("/careerPath"); 
     } 
 
-
-
-
   return (
-    <SafeAreaView className="bg-white h-full">
-    <ScrollView
-     contentContainerStyle={{
-       height: "100%",
-       marginHorizontal: 20,
-       paddingTop:120
-    }}
-    >
-      
-        <View className="w-full flex items-center flex-1 h-full px-4 my-6">
-          <Text className="text-2xl font-semibold text-black mt-10">
-            Never miss a message from someone
-          </Text>
-
+  
+      <SafeAreaView className="bg-white h-full">
+        <View className="flexGrow-1">
+          <ScrollView>
+            <View className="items-center flex-1  mb-20">
+              <Text className="text-2xl font-semibold text-secondary-200 mt-10  bg-cover  px-3 "  >
+                Never miss a message from someone
+              </Text>
+              <Image source={images.notification}
+                resizeMode='contain' className="my-0 w-[90px] h-[70px]" />
+            </View>
+          </ScrollView>
         </View>
-
-        
-        <CustomButton 
-            title="Allow notification" 
-            handlePress={requestPermission} 
-            containerStyles="mt-10 mb-4"
-            isLoading={isSubmitting}
-          />
-          
-          <CustomButton 
-            title="Not now" 
-            handlePress={handleNotNow} 
-            containerStyles="mb-4"
-          />
-      </ScrollView>
-
-
-    </SafeAreaView>
-  );
-};
+  
+    
+          <View className="w-full min-h-[vh] px-3 flex-1 mt-80">
+            <CustomButton 
+              title="Allow notification" 
+              handlePress={requestPermission} 
+              containerStyles="bg-secondary-200"
+              textStyles="text-center text-white"
+              isLoading={isSubmitting}
+            />
+            <CustomButton 
+              title="Not now" 
+              handlePress={handleNotNow} 
+              containerStyles="bg-white"
+              textStyles="text-center text-secondary-200"
+            />
+          </View>
+   
+      </SafeAreaView>
+    );
+  };
 
 export default NotificationScreen;

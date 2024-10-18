@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Alert } from 'react-native';
+import { View, Text, ScrollView, Alert,Image } from 'react-native';
+import { images, stepsBar } from "../../constants";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from "expo-router";
-import IconButton from '../../components/IconButton'; 
+import CustomButton from "../../components/CustomButton";
 import CardButton from '../../components/CardButton';
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { useUserContext } from '../../context/UserContext';  // Import useUserContext
@@ -69,37 +70,48 @@ const ProjectType = () => {
   ];
 
   return (
-    <SafeAreaView className="bg-white h-full">
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'center',
-          marginHorizontal: 20,
-          paddingVertical: 20,
-        }}
-      >
-        <View className="flex-1 mt-14">
-          <Text className="text-2xl font-semibold mb-3">
-            What are you looking for?
-          </Text>
-          
-          <CardButton
+    <SafeAreaView className="bg-secondary h-full">
+
+    <View className="items-center justify-center">
+      <Image source={images.Wlogo}
+        resizeMode='contain'  className="my-0 w-[150px] h-[100px]"/>
+    </View>
+
+    <View className="flexGrow-1">
+      <ScrollView className="h-full bg-white rounded-[35px]">
+        <Image source={stepsBar.Step9}
+        resizeMode='contain' className="w-[365px] h-[50px] mt-7 mb-2 self-center"/>
+
+    <View>
+    <Text className="text-2xl text-secondary text-semibold font-pmedium ml-3.5 mt-3 ">What's Your Looking For?</Text>
+    </View>
+
+    <View className = " w-full justify-center min-h-[10vh] px-3 flex-1 mt-8">   
+    <CardButton
             cards={cardOptions}
             handleCardPress={handleCardPress}
           />
-        </View>
-      </ScrollView>
+ 
+    </View>
 
-      <View className="px-6 pb-6">
-        <IconButton
+    <View className="w-full justify-center px-3 flex-1 mt-3.5">
+      <CustomButton 
+          title="Next"
           handlePress={handlePress}
-          containerStyles="bg-primary rounded-full"
-          iconStyles="text-white"
+          containerStyles="bg-secondary-200"
+          textStyles="text-center text-white"
           isLoading={isSubmitting}
         />
+        </View>
+    
+      </ScrollView>   
       </View>
+
+     
+
     </SafeAreaView>
   );
 };
+
 
 export default ProjectType;
