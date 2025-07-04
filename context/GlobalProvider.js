@@ -2,6 +2,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getCurrentUser } from "../lib/appwrite";
 
+/**
+ * Global context provider for managing global state related to user authentication.
+ * @returns {JSX.Element} The provider component that wraps the application and provides global state.
+ */
+
 const GlobalContext = createContext();
 
 export const useGlobalContext = () => useContext(GlobalContext);

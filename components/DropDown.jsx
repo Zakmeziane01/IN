@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 // Define the styles for the picker select
@@ -32,13 +32,16 @@ const DropDown = ({ selectedValue, onValueChange, items }) => {
       <Text className="text-xs mt-2">
         Identify the prompt that best describes you:
       </Text>
-      <RNPickerSelect
+     
+     <TouchableOpacity activeOpacity={1}>
+      <RNPickerSelect 
       onValueChange={onValueChange}
       items={items}
       style={pickerSelectStyles}
-      value={selectedValue}
-      placeholder={{ label: 'Select a prompt', value: null }}
-      />
+      value={selectedValue || undefined} // Ensure the value is not null
+      placeholder={{ label: 'Select a prompt', value: undefined }} // Use undefined, not null
+
+    /></TouchableOpacity>
     </View>
   );
 };

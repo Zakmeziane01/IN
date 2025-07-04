@@ -10,20 +10,25 @@ import { useUserContext } from '../../context/UserContext';
 import { updateUserAttribute } from '../../lib/appwrite';
 
 
+/**
+ * OwnCareer component handles the user's career selection and updates the user's career attribute.
+ * @returns None
+ */
+
 const OwnCareer = () => {
-  const { user } = useGlobalContext();       //The component uses two context APIs: useGlobalContext and useUserContext. The useGlobalContext provides access to the user object, while useUserContext provides a way to update the user's response.
+  const { user } = useGlobalContext();                         //The component uses two context APIs: useGlobalContext and useUserContext. The useGlobalContext provides access to the user object, while useUserContext provides a way to update the user's response.
   const { updateResponse } = useUserContext(); 
 
-  const [career, setCareer] = useState(user.career || '');    //The component maintains two states: career and isSubmitting. career stores the selected career option, and isSubmitting tracks whether the form is being submitted.
+  const [career, setCareer] = useState(user.career || '');     //The component maintains two states: career and isSubmitting. career stores the selected career option, and isSubmitting tracks whether the form is being submitted.
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePress = async () => {
-    if (!career) { // Check if the career field is empty
+    if (!career) {                                             // Check if the career field is empty
       Alert.alert("Error", "Please select an option");
       return;
     }
     
-    setIsSubmitting(true);     //setIsSubmitting is a function that updates the isSubmitting state variable. You can call this function to change the value of isSubmitting to true or false.
+    setIsSubmitting(true);     
     try {
       // Update the user's career attribute
       await updateUserAttribute(user.userId, 'career', career);
@@ -41,7 +46,7 @@ const OwnCareer = () => {
           router.replace("/workPositions");
           break;
         case 'Gap year':
-          router.replace("/projectType"); // Assuming you have a path for Gap Year
+          router.replace("/projectType"); 
           break;
         default:
           Alert.alert("Error", "Unexpected career option selected");
@@ -74,7 +79,7 @@ const OwnCareer = () => {
     <View className = "w-full justify-center min-h-[25vh] px-3 flex-1 mt-2">   
     <TabsContainer
             value={career}
-            handleChangeText={setCareer} // Directly update the career state
+            handleChangeText={setCareer}                            // Directly update the career state
             mode="selection"
             options={['Student', 'Work part-time', 'Work full-time', 'Gap year']}
             showIcon={false}

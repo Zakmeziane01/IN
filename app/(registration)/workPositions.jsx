@@ -6,17 +6,23 @@ import { router } from "expo-router";
 import FormField from '../../components/FormField';
 import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { useUserContext } from '../../context/UserContext'; // Import useUserContext
-import { updateUserAttribute } from '../../lib/appwrite'; // Updated import
-import { AlignJustify } from 'react-feather';
+import { useUserContext } from '../../context/UserContext'; 
+import { updateUserAttribute } from '../../lib/appwrite';
+
+/**
+ * Component that allows users to update their employment roles.
+ * It fetches the user data from the global context and provides a form for users to input their employment roles.
+ * Upon submission, it updates the user's employment roles in the database and navigates to the career path page.
+ * @returns None
+ */
 
 const WorkPositions = () => {
     const { user } = useGlobalContext();
-    const { updateResponse } = useUserContext(); // Access updateResponse from user context
+    const { updateResponse } = useUserContext();                // Access updateResponse from user context
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({
-        employmentRoles: user.employmentRoles || '', // Ensure default value
+        employmentRoles: user.employmentRoles || '',            // Ensure default value
     });
 
     // Function to handle form submission
@@ -27,14 +33,9 @@ const WorkPositions = () => {
         }
 
         setIsSubmitting(true);
-        try {
-            // Update user attributes in the backend
-            await updateUserAttribute(user.userId, 'employmentRoles', form.employmentRoles);
-
-            // Update the context with the new value
-            updateResponse('employmentRoles', form.employmentRoles);
-
-            // Navigate to the next screen
+        try {   
+            await updateUserAttribute(user.userId, 'employmentRoles', form.employmentRoles);   // Update user attributes in the backend
+            updateResponse('employmentRoles', form.employmentRoles);                           // Update the context with the new value
             router.push("/careerPath");
         } catch (error) {
             Alert.alert("Error", error.message);
@@ -85,10 +86,7 @@ const WorkPositions = () => {
             </View>
         
           </ScrollView>   
-          </View>
-    
-         
-    
+          </View>   
         </SafeAreaView>
       );
     };

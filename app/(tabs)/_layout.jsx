@@ -1,16 +1,18 @@
 import { StatusBar } from "expo-status-bar";
-import { Redirect, Tabs, Stack } from "expo-router";
-import { View, Text,Image} from "react-native";
+import { Redirect, Tabs } from "expo-router";
+import { View, Text,Image, Dimensions} from "react-native";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import {icons} from  "../../constants"; 
 import Loader from "../../components/Loader";   
 
-const TabIcon = ({ icon, color, name, focused }) => {       //Define a function-al component named TabIcon that takes four props: icon, color, name, and fo-cused.
+
+
+const TabIcon = ({ icon, color, name, focused }) => {                        //Define a function-al component named TabIcon that takes four props: icon, color, name, and fo-cused.
 
   return (
     <View className="flex items-center justify-center gap-1">        
       <Image
-        source={icon}   //source={icon}: Set the source of the image using the icon prop.
+        source={icon}                                                       //source={icon}: Set the source of the image using the icon prop.
         resizeMode="contain"
         tintColor={color}
         className="w-3.4 h-3"
@@ -20,19 +22,15 @@ const TabIcon = ({ icon, color, name, focused }) => {       //Define a function-
       style={{ color: color }}
       >
       {name} 
-      </Text>
-      
-    </View>
+      </Text> 
+  </View>
   );           
 };
 
 const TabsLayout = () => {   
   
-  
   const { loading, isLogged } = useGlobalContext();
-
- if (!loading && !isLogged) return <Redirect href="/sign-in" />;
-  
+    if (!loading && !isLogged) return <Redirect href="/sign-in" />;
   return (
     <>
     <Tabs
@@ -59,7 +57,7 @@ const TabsLayout = () => {
               <TabIcon
                 icon={icons.home}
                 color={color}
-                name="Home"
+                name="Feed"
                 focused={focused}
               />
             ),
@@ -68,23 +66,37 @@ const TabsLayout = () => {
     />
 
 
-    <Tabs.Screen
-          name="chat"
-          options={{
-            title: "Messages",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.plus}
-                color={color}
-                name="Messages"
-                focused={focused}
-              />
-            ),
-          }}
+      <Tabs.Screen
+      name='collaborators'
+      options={{
+      title: 'Collaborators',
+      headerShown: false,
+      tabBarIcon:({color, focused})=>(
+        <TabIcon
+        icon={icons.newcollab}
+        color={color}
+        name='Collab'
+        focused={focused}
         />
+      )
+      }}
+      />
 
-        
+     <Tabs.Screen
+     name='messages'
+     options={{
+       title: 'Messages',
+       headerShown: false,
+       tabBarIcon:({color, focused})=>(
+         <TabIcon
+         icon={icons.message}
+         color={color}
+         name='Chats'
+         focused={focused}
+         />
+       )
+     }}
+     />
     <Tabs.Screen
           name="profile"
           options={{
@@ -100,11 +112,7 @@ const TabsLayout = () => {
             ),
           }}
         />
-
-
 </Tabs>
-  
-
 
 <Loader isLoading={loading} />
 <StatusBar backgroundColor="#161622" style="light" />

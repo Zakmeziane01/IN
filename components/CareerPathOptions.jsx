@@ -5,7 +5,8 @@ import { Text, View, FlatList, Pressable } from 'react-native';
 
 const CareerPathOptions = ({ options, selectedValues, onPressOption }) => {
   const renderOption = ({ item }) => {
-    const isSelected = selectedValues.includes(item.value);
+    const selectedIndex = selectedValues.indexOf(item.value);
+    const isSelected = selectedIndex !== -1; // Check if item is selected
 
     return (
       <View>
@@ -28,8 +29,8 @@ const CareerPathOptions = ({ options, selectedValues, onPressOption }) => {
               marginRight: 10,
             }}
           >
-            <Text style={{ color: isSelected ? '#5bb450' : 'lightgray', fontSize: 24, fontWeight: 'bold' }}>
-              {isSelected ? '✓' : '+'}
+                  <Text style={{ color: isSelected ? '#5bb450' : 'lightgray', fontSize: 17, fontWeight: 'bold' }}>
+                  {isSelected ? (selectedIndex + 1) : '+'}
             </Text>
           </Pressable>
         </View>

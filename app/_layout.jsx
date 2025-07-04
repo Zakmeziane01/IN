@@ -7,6 +7,12 @@ import { UserProvider } from '../context/UserContext';
 
 
 
+/**
+ * RootLayout component that handles loading fonts and displaying the application layout.
+ * It ensures that the SplashScreen is hidden once the fonts are loaded.
+ * @returns {JSX.Element} The JSX element representing the RootLayout component.
+ */
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -55,7 +61,7 @@ const RootLayout = () => {
     <Stack.Screen name="(auth)" options={{ headerShown: false }} />
     <Stack.Screen name="index" options={{ headerShown: false }} />
     <Stack.Screen name="(registration)" options={{ headerShown: false }} />
-    <Stack.Screen name="(screens)" options={{ headerShown: false }} />
+    <Stack.Screen name="(chatScreens)" options={{ headerShown: false }} />
     </Stack>
     </UserProvider> 
   </GlobalProvider>

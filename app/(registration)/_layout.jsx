@@ -1,9 +1,8 @@
-import { Stack, Redirect } from "expo-router";
+import { Stack} from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
 
 const RegistrationLayout = () => {
-  // Redirect if not logged in
 
   return (
     <>

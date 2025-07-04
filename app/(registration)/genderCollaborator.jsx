@@ -5,13 +5,13 @@ import TabsContainer from '../../components/TabsContainer';
 import { images, stepsBar } from "../../constants";
 import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from '../../context/GlobalProvider';
-import { useUserContext } from '../../context/UserContext'; // Import useUserContext
+import { useUserContext } from '../../context/UserContext';      
 import { router } from 'expo-router';
 import { updateUserAttribute } from '../../lib/appwrite';
 
 const GenderCollaborator = () => {
   const { user } = useGlobalContext();
-  const { updateResponse } = useUserContext(); // Access updateResponse from user context
+  const { updateResponse } = useUserContext();                      // Access updateResponse from user context
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [collabGender, setCollabGender] = useState(user.CollabGender || '');
@@ -55,14 +55,13 @@ const GenderCollaborator = () => {
     <Text className="text-2xl text-secondary text-semibold font-pmedium ml-3  mt-2 ">What type of collaborator are you looking for?</Text>
     </View>
 
-    <View className = " w-full justify-center min-h-[25vh] px-3 flex-1 mt-2">   
-    <TabsContainer 
-    value={collabGender} // corrected to use state
-    handleChangeText={setCollabGender} // pass the state updater function
-    mode="selection"
-    options={['Male', 'Female', 'Both']}
-/>
- 
+    <View className = " w-full justify-center min-h-[25vh] px-3 flex-1 mt-2">  
+        <TabsContainer 
+        value={collabGender}                                      // corrected to use state
+        handleChangeText={setCollabGender}                        // pass the state updater function
+        mode="selection"
+        options={['Male', 'Female', 'Both']}
+    />
     </View>
 
     <View className="w-full justify-center min-h-[37vh] px-3 flex-1 mt-2">

@@ -6,12 +6,19 @@ import { router } from "expo-router";
 import TabsContainer from '../../components/TabsContainer';
 import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { useUserContext } from '../../context/UserContext'; // Import useUserContext
+import { useUserContext } from '../../context/UserContext'; 
 import { updateUserAttribute } from '../../lib/appwrite'; 
+
+/**
+ * Functional component that handles the workforce size form submission.
+ * It retrieves user information from the global context, updates the user response
+ * in the user context, and handles the form submission process.
+ * @returns None
+ */
 
 const WorkforceSize = () => {
     const { user } = useGlobalContext();
-    const { updateResponse } = useUserContext(); // Access updateResponse from user context
+    const { updateResponse } = useUserContext();                      // Access updateResponse from user context
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({
         collaborativeNetworkSize: user.collaborativeNetworkSize || '' // Ensure default value
@@ -26,13 +33,8 @@ const WorkforceSize = () => {
 
         setIsSubmitting(true);
         try {
-            // Update the collaborativeNetworkSize attribute in the backend
-            await updateUserAttribute(user.userId, 'collaborativeNetworkSize', form.collaborativeNetworkSize);
-            
-            // Update the context with the new value
-            updateResponse('collaborativeNetworkSize', form.collaborativeNetworkSize);
-
-            // Navigate to the next screen
+            await updateUserAttribute(user.userId, 'collaborativeNetworkSize', form.collaborativeNetworkSize); // Update the collaborativeNetworkSize attribute in the backend           
+            updateResponse('collaborativeNetworkSize', form.collaborativeNetworkSize);                         // Update the context with the new value
             router.push("/skills");
         } catch (error) {
             Alert.alert("Error", error.message);
@@ -82,8 +84,7 @@ const WorkforceSize = () => {
         
           </ScrollView>   
           </View>
-    
-         
+
     
         </SafeAreaView>
       );

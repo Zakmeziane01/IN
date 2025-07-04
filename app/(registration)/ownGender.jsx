@@ -9,29 +9,30 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import { useUserContext } from '../../context/UserContext';
 import { updateUserAttribute } from '../../lib/appwrite';
 
+/**
+ * Component for handling the user's own gender selection and updating it in the user context.
+ * @returns None
+ */
+
 const OwnGender = () => {
   const { user } = useGlobalContext();
   const { updateResponse } = useUserContext();
   
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [gender, setGender] = useState(user.gender || ''); // Initialize with user's gender or empty string
+  const [gender, setGender] = useState(user.gender || '');               // Initialize with user's gender or empty string
 
 
   // Function to handle form submission
   const handlePress = async () => {
-    if (!gender) { // Check if gender is selected
+    if (!gender) {                                                      // Check if gender is selected
       Alert.alert("Error", "Please select your gender");
       return;
     }
     
     setIsSubmitting(true);
     try {
-      // Update the user's gender attribute
-      await updateUserAttribute(user.userId,  'gender', gender);
-
-      // Update the context with the selected gender
-      updateResponse('gender', gender);
-
+      await updateUserAttribute(user.userId,  'gender', gender);        // Update the user's gender attribute
+      updateResponse('gender', gender);                                 // Update the context with the selected gender
       router.push("/localization");
     } catch (error) {
       Alert.alert("Error", error.message);

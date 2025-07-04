@@ -1,48 +1,84 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, Text, Dimensions, TouchableOpacity, Platform, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView, Image, Pressable, TouchableOpacity, Alert, RefreshControl } from "react-native";
+import { icons, images } from "../../constants";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Carousel from "react-native-snap-carousel";
+import { router } from "expo-router";
+import CustomButton from '../../components/CustomButton';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { updateRejectedUsers, getAllUsers } from "../../lib/appwrite";
 import DatesCard from "../../components/DatesCard";
 import DatesCardGroup from "../../components/DatesCardGroup";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { useGlobalContext } from "../../context/GlobalProvider";
-import { getAllUsers, addMatch, createChatRoom, checkMatchExists, getChatRoomId } from "../../lib/appwrite";
-import { router } from "expo-router";
-
-const { width } = Dimensions.get("window");
-const android = Platform.OS === "android";
 
 const Home = () => {
-  const { user } = useGlobalContext();
-  const [users, setUsers] = useState([]);
+  const { user: currentUser, isLogged, loading } = useGlobalContext();
+
+  const [users, setUsers] = useState([]); // Array to store all available users
+  const [rejectedUsers, setRejectedUsers] = useState(new Set()); // Set to track rejected user IDs
+  const [likedUsers, setLikedUsers] = useState(new Set()); // Set to track liked user IDs
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [websocket, setWebSocket] = useState(null);
-  const carouselRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);      //Keeps track of the current item in the carousel.
+  const [showRejectOverlay, setShowRejectOverlay] = useState(false); // Show rejection overlay
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUsers();
+    setRefreshing(false);
+  };
+
+  // Move to the next user
+  const goToNextUser = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % users.length);
+  };
+
+  // Handle rejection
+  const handleRejectPress = async () => {
+    const rejectedUser = users[currentIndex];
+    if (rejectedUser) {
+      setRejectedUsers(prev => new Set([...prev, rejectedUser.userId])); // Add to rejected list
+
+      // Show rejection overlay for 1 second
+      setShowRejectOverlay(true);
+      setTimeout(() => {
+        setShowRejectOverlay(false);
+        goToNextUser(); // Move to the next user after 1 second
+      }, 1000);
+
+      try {
+        if (currentUser) {
+          await updateRejectedUsers(currentUser.userId, rejectedUser.userId); // Update rejection in Appwrite
+        }
+      } catch (error) {
+        console.error("Error updating rejected users:", error);
+      }
+    }
+  };
+
+  // Fetch users
+  const fetchUsers = async () => {
+    try {
+      const response = await getAllUsers();
+      const filteredUsers = response.filter(
+        user => !rejectedUsers.has(user.userId) && !likedUsers.has(user.userId)
+      );
+      setUsers(filteredUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await getAllUsers();
-        setUsers(response);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
     fetchUsers();
 
-    const ws = new WebSocket('ws://localhost:8080');    //Sets up a WebSocket connection to 'ws://localhost:8080'.   common in development environments where you're testing both the client and server on the same machine.   common in development environments where you're testing both the client and server on the same machine.
-  
+    // WebSocket connection
+    const ws = new WebSocket('ws://localhost:8080');
     ws.onopen = () => {
       console.log('WebSocket connected');
       setWebSocket(ws);
     };
-
     ws.onmessage = (event) => {
       console.log('Message from server:', event.data);
-      // Handle incoming messages
     };
-
     ws.onclose = () => {
       console.log('WebSocket disconnected');
       setWebSocket(null);
@@ -51,98 +87,106 @@ const Home = () => {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [rejectedUsers, likedUsers]);
 
-  const handleMessagePress = async () => {
-    try {
-      const currentUser = user;
-      if (!currentUser) throw new Error("No current user found");
+  if (loading) {
+    return (
+      <SafeAreaView className="bg-secondary h-full justify-center items-center">
+        <Text className="text-white text-lg">Loading...</Text>
+      </SafeAreaView>
+    );
+  }
 
-      const selectedUser = users[currentIndex];
-      if (selectedUser && currentUser.userId !== selectedUser.userId) {
-        // Check if match already exists
-        const matchExists = await checkMatchExists(currentUser.userId, selectedUser.userId);
-        if (!matchExists) {
-          await addMatch(currentUser.userId, selectedUser.userId);
-        }
-
-        // Check if chat room already exists
-        let chatRoomId = await getChatRoomId(currentUser.userId, selectedUser.userId);
-        if (!chatRoomId) {
-          chatRoomId = await createChatRoom(currentUser.userId, selectedUser.userId);
-        }
-
-        if (chatRoomId) {
-
-          router.push(`/chatDetailsScreen?chatRoomId=${chatRoomId}`);
-          // Notify other clients about the new chat room
-          if (websocket) {
-            websocket.send(JSON.stringify({ type: 'NEW_CHAT_ROOM', chatRoomId }));
-          }
-        } else {
-          console.error("Failed to create chat room");
-        }
-      } else {
-        console.log("Cannot match with yourself");
-      }
-    } catch (error) {
-      console.error("Error handling message press:", error);
-    }
-  };
-
-  const handleRefusePress = () => {                        //Moves the carousel to the next item.
-    if (carouselRef.current) {
-      const nextIndex = (currentIndex + 1) % users.length;
-      carouselRef.current.snapToItem(nextIndex);
-      setCurrentIndex(nextIndex);
-    }
-  };
-
-  const renderItem = ({ item }) => (                    //Renders each item in the carousel using the DatesCard component.
-    <DatesCard item={item} handleClick={(clickedItem) => console.log('Card clicked')} />  
-  );
+  if (!isLogged || !currentUser) {
+    return (
+      <SafeAreaView className="bg-secondary h-full justify-center items-center">
+        <Text className="text-white text-lg">User not authenticated</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <SafeAreaView className={`flex-1 bg-white ${android ? 'pt-2' : 'pt-0'}`}>
+    <SafeAreaView className="bg-secondary h-full">
+      <ScrollView
+        className="bg-gray-300"
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        <View className="mt-10">
+          <DatesCardGroup />
+        </View>
 
-        <ScrollView className="bg-white h-full">   
-          <View className="mt-10">
-            <DatesCardGroup>   
-            </DatesCardGroup>  
-          </View> 
+        <View className="flex-1 justify-center mx-3.5">
+          {users[currentIndex] && (
+            <DatesCard
+              item={users[currentIndex]}
+              handleClick={() => console.log('Card clicked')}
+            />
+          )}
+        </View>
 
-          <View className="flex-1 justify-center">
-              <Carousel
-                ref={carouselRef}
-                data={users}
-                renderItem={renderItem}
-                sliderWidth={width}
-                itemWidth={width * 0.95}
-                inactiveSlideScale={0.9}
-                inactiveSlideOpacity={0.3}
-                onSnapToItem={(index) => setCurrentIndex(index)}
-              />
-            </View>
-        </ScrollView>
+        <View className="my-6 px-4 space-y-6">
+          <CustomButton
+            title="Message"
+            handlePress={() => {
+              router.push({
+                pathname: "/first-chat",
+                params: {
+                  userId: '66ba5a7a0010c3555dd2',
+                  userName: 'David',
+                  currentUser: currentUser.$id,
+                  currentUsername: currentUser.username,
+                  isGroup: false,
+                },
+              });
+            }}
+            containerStyles="bg-secondary mx-4 my-5"
+            textStyles="text-white"
+            shadow={true}
+          />
+        </View>
+      </ScrollView>
 
 
-            <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 14 }}>
-              <TouchableOpacity
-                style={{ backgroundColor: "blue", borderRadius: 8, padding: 10, marginRight: 14 }}
-                onPress={handleMessagePress}
-              >
-                <Text style={{ color: "white", fontSize: 18 }}>Send</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ backgroundColor: "red", borderRadius: 8, padding: 10 }}
-                onPress={handleRefusePress}
-              >
-                <Text style={{ color: "white", fontSize: 18 }}>Next</Text>
-              </TouchableOpacity>
-            </View>
 
-      </SafeAreaView>
-        );
-      };
+      {showRejectOverlay && (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "white",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1,
+            opacity: 1,
+            transition: "opacity 1s ease-out",
+          }}
+        >
+          <Text style={{ fontSize: 100, color: "#5bb450" }}>X</Text>
+        </View>
+      )}
+
+      <View
+        className="flex-row justify-between px-3.5 bg-white"
+        style={{ height: 80, marginBottom: -40 }}
+      >
+        <View className="my-2.5 shadow-sm">
+          <Pressable
+            className="bg-[#1E2A30] rounded-xl flex-row items-center justify-center"
+            onPress={handleRejectPress}
+            style={{
+              height: 55,
+              width: 84,
+            }}
+          >
+            <Image source={icons.rejection} className="w-3 h-3" />
+          </Pressable>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 export default Home;

@@ -4,11 +4,9 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 import Loader from "../../components/Loader";
 
 const AuthLayout = () => {
-  
+  const { loading, isLogged } = useGlobalContext();                   // Fetch loading state and login status from the global context
 
-  const { loading, isLogged } = useGlobalContext();
-
-  if (!loading && isLogged) return <Redirect href="/uploadPhoto" />;
+  if (!loading && isLogged) return <Redirect href="/uploadPhoto" />;  // Redirect to upload photo page if logged in and not loading
 
   return (
     <>
@@ -16,26 +14,25 @@ const AuthLayout = () => {
         <Stack.Screen
           name="sign-in"
           options={{
-            headerShown: false,
+            headerShown: false,                                      // Sign-in screen without header
           }}
         />
         <Stack.Screen
           name="sign-up"
           options={{
-            headerShown: false,
+            headerShown: false,                                      // Sign-up screen without header
           }}
         />
-
         <Stack.Screen
           name="email-auth"
           options={{
-            headerShown: false,
+            headerShown: false,                                     // Email authentication screen without header
           }}
         />
       </Stack>
 
-      <Loader isLoading={loading} />
-      <StatusBar backgroundColor="#161622" style="light" />
+      <Loader isLoading={loading} />                              {/* Loader component to show loading state while fetching auth status */}
+      <StatusBar backgroundColor="#161622" style="light" />       {/* Custom status bar with dark background and light text */}
     </>
   )
 }

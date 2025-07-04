@@ -6,13 +6,16 @@ import { router } from "expo-router";
 import CustomButton from "../../components/CustomButton";
 import CardButton from '../../components/CardButton';
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { useUserContext } from '../../context/UserContext';  // Import useUserContext
+import { useUserContext } from '../../context/UserContext';  
 import { updateUserAttribute } from '../../lib/appwrite';
 
+/**
+ * Represents a component for selecting and updating the project type for a user.
+ * @returns None
+ */
 const ProjectType = () => {
   const { user } = useGlobalContext();
   const { updateResponse } = useUserContext();  // Access updateResponse from user context
-
   const [projectDivision, setProjectDivision] = useState(user.projectDivision || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,14 +27,9 @@ const ProjectType = () => {
     }
 
     setIsSubmitting(true);
-    try {
-      // Update the projectDivision attribute in the backend
-      await updateUserAttribute(user.userId, 'projectDivision', projectDivision);
-
-      // Update the context with the new value
-      updateResponse('projectDivision', projectDivision);
-
-      // Navigate to the next screen
+    try {    
+      await updateUserAttribute(user.userId, 'projectDivision', projectDivision);        // Update the projectDivision attribute in the backend     
+      updateResponse('projectDivision', projectDivision);                                // Update the context with the new value
       router.replace("/workforceSize");
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -106,9 +104,7 @@ const ProjectType = () => {
     
       </ScrollView>   
       </View>
-
-     
-
+      
     </SafeAreaView>
   );
 };

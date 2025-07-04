@@ -8,6 +8,12 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 import { useUserContext } from "../../context/UserContext"; // Import useUserContext
 import { updateUserAttribute } from '../../lib/appwrite';
 
+/**
+ * Component that handles updating user skills information.
+ * It allows the user to input their general skills, about section, and spoken languages.
+ * @returns None
+ */
+
 const Skills = () => {
     const { user } = useGlobalContext();
     const { updateResponse } = useUserContext(); // Access updateResponse from UserContext

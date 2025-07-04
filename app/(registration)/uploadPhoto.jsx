@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as FileSystem from 'expo-file-system';
 import {
     View,
     Text,
@@ -19,9 +18,12 @@ import {
   import { createPhotoProfile} from '../../lib/appwrite';
 
 
+/**
+ * Function to handle uploading a photo by selecting from the device's gallery.
+ * It uses the ImagePicker library to select an image, then uploads it to the server.
+ * @returns None
+ */
 const uploadPhoto = () => {
-
-
     const router = useRouter();
     const { user } = useGlobalContext();
     const [uploading, setUploading] = useState(false);
@@ -41,16 +43,16 @@ const uploadPhoto = () => {
 
       // Open gallery to pick an image
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images, // Only allow images
-        allowsEditing: true, // Allow basic editing (optional)
-        aspect: [4, 3], // Define aspect ratio (optional)
-        quality: 1, // Image quality (1 is the highest)
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,            // Only allow images
+        allowsEditing: true,                                        // Allow basic editing (optional)
+        aspect: [4, 3],                                             // Define aspect ratio (optional)
+        quality: 1,                                                 // Image quality (1 is the highest)
       });
 
       if (!result.canceled) {
         setForm({
           ...form,
-          thumbnail: result.assets[0], // Set the selected image
+          thumbnail: result.assets[0],                              // Set the selected image
         });
       } else {
         Alert.alert("No image selected");
@@ -64,14 +66,10 @@ const uploadPhoto = () => {
       }
 
       setUploading(true);
-      try {
-
-       
+      try { 
         await createPhotoProfile(form.thumbnail.uri, user.userId);
         console.log(user)
         console.log("from photo", user.userId)
-
-
         Alert.alert("Success", "Image uploaded successfully");
         router.push("/uploadProject");
       } catch (error) {
@@ -126,9 +124,8 @@ const uploadPhoto = () => {
                 </View>
               )}
 
-            </TouchableOpacity>
-
-            
+       </TouchableOpacity>
+      
             <View className="w-full justify-center min-h-[40vh] px-3 flex-1">
             <View className="flex flex-row justify-center mb-4 mr-3.5">              
             <Image

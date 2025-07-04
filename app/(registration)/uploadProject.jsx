@@ -12,15 +12,17 @@ import { images, stepsBar } from "../../constants";
 import { icons } from '../../constants';
 
 
+/**
+ * Functional component for the Upload Document page.
+ * Handles uploading documents and updating user attributes.
+ * @returns None
+ */
 const UploadDocumentPage = () => {
-
-
   const { user } = useGlobalContext();
   const { updateResponse, getResponses } = useUserContext();  
   const [files, setFiles] = useState(Array(6).fill(null));    // Manage URIs of 6 uploaded files.
   const [uploading, setUploading] = useState(false);
-  const [links, setLink] = useState(user.links || ''); // State to store the link input
-
+  const [links, setLink] = useState(user.links || '');        // State to store the link input
 
 
   useEffect(() => {
@@ -38,7 +40,6 @@ const UploadDocumentPage = () => {
     newFiles[index] = uri; // Updates the newFiles array by assigning the uri value to the element at the specified index
     setFiles(newFiles); // Set the updated files array
   };
-
 
 
   const handleUpload = async () => {
@@ -59,22 +60,17 @@ const UploadDocumentPage = () => {
       if (links) {
         // Update user's attribute with the uploaded link
         await updateUserAttribute(user.userId, 'links', links);
-        // Confirm success to the user
-        Alert.alert("Link Uploaded", `You have uploaded: ${links}`);
         setLink(''); // Clear the input after upload
       } else {
         Alert.alert("Error", "Please enter a valid link.");
         return;
       }
-
-      console.log("Upload success", files, links);
       router.push('/allowNotification');
     } catch (error) {
       console.error("Upload failed", error);
       Alert.alert(
         "Upload Failed",
         "Failed to upload the files or link. Please try again.",
-        [{ text: "OK" }]
       );
     } finally {
       setUploading(false);

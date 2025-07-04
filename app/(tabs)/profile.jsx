@@ -7,6 +7,12 @@ import { getUserAttributes } from '../../lib/appwrite';
 import { useUserContext } from '../../context/UserContext';
 import * as Location from 'expo-location';
 
+/**
+ * Functional component that displays the user's profile information.
+ * It fetches user attributes, including profile image and address, and displays them.
+ * @returns JSX element displaying the user's profile information.
+ */
+
 const Profile = () => {
   const { user } = useGlobalContext();
   const [userAttributes, setUserAttributes] = useState(null);

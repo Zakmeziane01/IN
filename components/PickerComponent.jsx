@@ -3,26 +3,19 @@ import { View, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
 import { TouchableOpacity, Modal } from 'react-native';
 
-const PickerComponent = ({ title, value, onValueChange, containerStyles, otherStyles2, otherStyles }) => {
-  const [date, setDate] = useState(new Date());
+const PickerComponent = ({ title, onValueChange, otherStyles }) => {
+  const [date, setDate] = useState(new Date()); // Store selected date
   const [showPicker, setShowPicker] = useState(false);
-  const [pickerValue, setPickerValue] = useState(null); // Initialize pickerValue to null
 
   const onChange = (event, selectedDate) => {
     if (event.type === 'set') {
       const currentDate = selectedDate || date;
-      setPickerValue(currentDate);
-      confirmSelection(currentDate);
+      setDate(currentDate);
+      onValueChange(currentDate); // Send selected date to parent
+      setShowPicker(false);
     } else if (event.type === "dismissed") {
       setShowPicker(false);
     }
-  };
-
-  const confirmSelection = (selectedDate) => {
-    const confirmedDate = selectedDate || pickerValue;
-    setDate(confirmedDate);
-    onValueChange(confirmedDate);
-    setShowPicker(false);
   };
 
   const showDatePicker = () => {
@@ -39,23 +32,19 @@ const PickerComponent = ({ title, value, onValueChange, containerStyles, otherSt
 
       <TouchableOpacity 
         onPress={showDatePicker} 
-        className={`border-2 border-gray-200 w-full p-5 h-16 justify-center  ${
-          pickerValue ? 'border-green-600 border-2 bg-white rounded-xl' : 'border-gray-200 border-2 bg-white rounded-xl'
-        }`}
+        className={`border-2 border-gray-200 w-full p-5 h-16 justify-center bg-white rounded-xl`}
       >
-        <Text 
-         className="flex-2 text-[#7b7b8b] font-pregular text-base ml-2"
-        >
-          {pickerValue ? pickerValue.toLocaleDateString() : 'DD-MM-YYYY'}
+        <Text className="text-[#7b7b8b] font-pregular text-base ml-2">
+          {date ? date.toLocaleDateString() : 'DD-MM-YYYY'}
         </Text>
       </TouchableOpacity>
 
       {showPicker && (
         Platform.OS === 'ios' ? (
           <DateTimePicker
-            value={pickerValue || new Date()} 
+            value={date}
             mode="date"
-            display="spinner" 
+            display="spinner"
             onChange={onChange}
             style={{ backgroundColor: 'white' }}
           />
@@ -67,9 +56,9 @@ const PickerComponent = ({ title, value, onValueChange, containerStyles, otherSt
             onRequestClose={() => setShowPicker(false)}
           >
             <DateTimePicker
-              value={pickerValue || new Date()} 
+              value={date}
               mode="date"
-              display="default" 
+              display="default"
               onChange={onChange}
             />
           </Modal>

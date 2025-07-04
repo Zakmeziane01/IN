@@ -10,11 +10,16 @@ import { useGlobalContext } from '../context/GlobalProvider'
 import Loader from '../components/Loader';
 
 
+/**
+ * Functional component representing the main application.
+ * @returns JSX element containing the main application layout.
+ */
+
 export default function  App() {
   
   const { loading, isLogged } = useGlobalContext();
 
-  if (!loading && isLogged) return <Redirect href="/uploadPhoto" />;
+  if (!loading && isLogged) return <Redirect href="/sign-in" />;
 
 
   return (

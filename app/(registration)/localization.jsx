@@ -6,19 +6,27 @@ import { router } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useGlobalContext } from '../../context/GlobalProvider';
-import { useUserContext } from '../../context/UserContext'; // Import useUserContext
+import { useUserContext } from '../../context/UserContext';       
 import { updateUserAttribute } from '../../lib/appwrite';
 import CustomButton from "../../components/CustomButton";
 
 const Localization = () => {
-  const { user } = useGlobalContext();
-  const { updateResponse } = useUserContext(); // Access updateResponse from user context
-  const [isGetLocationPressed, setIsGetLocationPressed] = useState(false);
+  const { user } = useGlobalContext();                                     // Access the current user from global context
+  const { updateResponse } = useUserContext();                             // Allows updating user-related state globally
   const [isSearchPressed, setIsSearchPressed] = useState(false);
   
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [search, setSearch] = useState('');
+  const [location, setLocation] = useState(null);                          // Stores the user's geolocation (latitude & longitude)
+
+  const [errorMsg, setErrorMsg] = useState(null);                         // Stores any location-related error messages
+  /**
+   * Manages the state and functionality related to location search and submission.
+   * Uses useState to manage search input, postcode input, and submission status.
+   * Utilizes useEffect to fetch the current location when the component mounts.
+   * Defines functions to get the current location, handle search based on input,
+   * save location data, and handle submission of location data.
+   * @returns None
+   */
+  const [search, setSearch] = useState(''); 
   const [postcode, setPostcode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,7 +49,7 @@ const Localization = () => {
     getLocation();
   }, []);
 
-  const getCurrentLocation = async () => {
+  const getCurrentLocation = async () => {                              //keep the function to make sure why i mentioned it. 
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -59,6 +67,7 @@ const Localization = () => {
       setErrorMsg('Error getting current location');
     }
   };
+
 
   const handleSearch = async () => {
     if (!search.trim() && !postcode.trim()) {
@@ -92,7 +101,7 @@ const Localization = () => {
 
       // Store city in the user attributes
       await updateUserAttribute(user.userId, 'city', city);
-      updateResponse('city', city); // Update context with the city name
+      updateResponse('city', city);                                   
 
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -158,7 +167,7 @@ const Localization = () => {
                 handleSearch();
                 setIsSearchPressed(true);
                 setTimeout(() => {
-                  setIsSearchPressed(false);
+                setIsSearchPressed(false);
                 }, 200); // reset the state after 200ms
               }}
               className={`border-2 border-secondary-200 p-3 rounded-full flex-1 mt-2.5 ${isSearchPressed ? 'bg-secondary-200' : 'bg-white'}`}

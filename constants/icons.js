@@ -11,6 +11,8 @@ import logout from "../assets/icons/logout.png";
 import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
+import message from "../assets/icons/message.png";
+
 import setting from "../assets/icons/setting.png";
 import dots from  "../assets/icons/dots.png";
 import attention from  "../assets/icons/attention.png";
@@ -23,6 +25,17 @@ import languageFeed from "../assets/icons/languageFeed.png";
 import work from "../assets/icons/work.png";
 import university from "../assets/icons/university.png";
 import relationship from "../assets/icons/relationship.png";
+import rejection from "../assets/icons/rejection.png";
+import nextButton from "../assets/icons/nextButton.png";
+
+
+import newcollab from "../assets/icons/newcollab.png";
+import backArrow from "../assets/icons/back-arrow.png";
+import groupW from "../assets/icons/group-white.png";
+import groupB from "../assets/icons/group-black.png";
+import menuB from "../assets/icons/menuB.png";
+import backArrowB from "../assets/icons/back-arrow-black.png";
+
 
 
 
@@ -56,5 +69,13 @@ export default {
   work,
   university,
   relationship,
-
+  rejection,
+  message,
+  nextButton,
+  newcollab,
+  backArrow,
+  groupW,
+  groupB,
+  menuB,
+  backArrowB,
 };
